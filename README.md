@@ -52,7 +52,7 @@ You should now have a JavaScript console connected.
 
 Try it out!
 
-Get into a car, and type this:
+Type this:
 
 ```
 CoinManager.SpawnInstantCoins(0, 0, 0, 10)
