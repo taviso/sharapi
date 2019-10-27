@@ -6,6 +6,9 @@ This is a library to allow automating and manipulating the game Simpsons: Hit &
 Run with JavaScript. It uses the frida library to instrument and access
 internal state.
 
+[![Screenshot](doc/fuzzing-small.png)](doc/fuzzing.png)
+
+
 # Installation
 
 You need [frida](https://frida.re/) intalled, if you already have python it
