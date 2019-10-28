@@ -10,5 +10,6 @@ scriptfile.out.js: tls.js       \
                    radmath.js   \
                    classes.js   \
                    usercall.js  \
+                   input.js     \
                    main.js
 	cat $^ > $@

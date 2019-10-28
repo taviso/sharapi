@@ -36,20 +36,15 @@ class Vehicle {
     }
 
     GetPosition() {
-        var Position = CreateVector(0, 0, 0);
-        var Result = [];
+        var Position = new Radmath.Vector();
 
-        Vehicle._GetPosition(this._vehicle, Position);
-
-        Result.push(Position.add(2 * 4).readFloat());
-        Result.push(Position.add(0 * 4).readFloat());
-        Result.push(Position.add(1 * 4).readFloat());
-        return Result;
+        Vehicle._GetPosition(this._vehicle, Position.addr);
+        return Position;
     }
 
     SetPosition(x, y, z) {
-        var Position = CreateVector(x, y, z);
-        return Vehicle._SetPosition(this._vehicle, Position);
+        var Position = new Radmath.Vector(x, y, z);
+        return Vehicle._SetPosition(this._vehicle, Position.addr);
     }
 
 }
@@ -70,14 +65,14 @@ class CoinManager {
     }
 
     static SpawnInstantCoins(x, y, z, count) {
-        var Position = CreateVector(x, y, z);
-        this._SpawnInstantCoins(this.GetInstance(), count, Position);
+        var Position = new Radmath.Vector(x, y, z);
+        this._SpawnInstantCoins(this.GetInstance(), count, Position.addr);
     }
 
     // FIXME, this doesnt work right
     static SpawnCoins(x, y, z, count) {
-        var Position = CreateVector(x, y, z);
-        this._spawnCoins(this.GetInstance(), Position, 0, count, Position);
+        var Position = new Radmath.Vector(x, y, z);
+        this._spawnCoins(this.GetInstance(), Position.addr, 0, count, Position.addr);
     }
 
     static VehicleDestroyed(vehicle) {
@@ -85,3 +80,24 @@ class CoinManager {
     }
 }
 
+class CommandLineOptions {
+    static _Options = Symbol.ptr("CommandLineOptions::sOptions");
+
+    static flags = {
+        NOEFFECTS:      1,
+        NODIALOG:       2,
+        RANDOMBUTTONS:  12,
+    }
+
+    static Get(n) {
+        return !! (this._Options.readU64() & (1 << n))
+    }
+
+    static Set(n) {
+        this._Options.writeU64(this._Options.readU64() | (1 << n));
+    }
+
+    static Clear(n) {
+        this._Options.writeU64(this._Options.readU64() & ~(1 << n));
+    }
+}

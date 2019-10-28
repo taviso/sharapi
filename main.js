@@ -40,7 +40,8 @@ function BeginFuzz()
         Thread.sleep(0.5);
 
         // Log Result.
-        console.log("Position", Car.GetPosition(), "Coins", CharacterSheetManager.GetNumberOfTokens());
+        console.log("Position", Car.GetPosition().toArray(),
+                    "Coins", CharacterSheetManager.GetNumberOfTokens());
     }
 }
 

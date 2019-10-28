@@ -64,8 +64,9 @@ Get into a car, and type this:
 
 ```
 var v = (new Character()).GetVehicle()
-var p = v.GetPosition()
+var p = v.GetPosition().toArray()
 
+// p is [x, y, z] co-ordinates of the car.
 p[2] += 10
 
 v.SetPosition.apply(v, p)
@@ -73,6 +74,19 @@ v.SetPosition.apply(v, p)
 
 Your car should jump 100 ft in the air.
 
+Simulate keyboard input events. Note: I'm working on this API, it will be
+easier when finished!
+
+```
+// Find the active Controller
+var c = InputManager.GetController();
+
+// Say that button 'W' is now down (Note: 1 is button scheme on foot).
+c.GetMappable(1).UpdateButtonState(1.0, 7);
+
+// You can say it's up again like this.
+c.GetMappable(1).UpdateButtonState(0.0, 7);
+```
 
 # Notes
 
