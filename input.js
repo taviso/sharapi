@@ -12,6 +12,7 @@
 
 class Button {
     static _TickCount = Symbol.ptr("Button::mTickCount");
+
     static get TickCount() {
         return Button._TickCount.readU32();
     }
@@ -46,7 +47,7 @@ class Mappable {
     UpdateButtonState(state, index) {
         var b = Memory.alloc(8);
         b.add(0).writeFloat(state);
-        b.add(4).writeU32(+Button.Tickcount);
+        b.add(4).writeU32(Button.TickCount);
         return Mappable._UpdateButtonState(this._mappable, b, index, 0);
     }
 
