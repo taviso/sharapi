@@ -41,7 +41,8 @@ class Mappable {
         return !! Mappable._IsButtonDown(index, this._mappable);
     }
 
-    // This doesnt work
+    // This kinda works, I don't know what the last parameter is, it doesn't
+    // seem to be used.
     UpdateButtonState(state, index) {
         var b = Memory.alloc(8);
         b.add(0).writeFloat(state);
