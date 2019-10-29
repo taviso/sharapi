@@ -1,10 +1,10 @@
-function UserpurgeWrapper(convention, address)
+function userpurge(convention, address)
 {
     var code = Memory.alloc(Process.pageSize);
     var gen = new X86Writer(code);
 
     if (convention.includes("edi"))
-        return;
+        throw "fixme: no spare register";
 
     gen.putPopReg("edi"); // Save return address
 
@@ -14,7 +14,7 @@ function UserpurgeWrapper(convention, address)
     }
 
     gen.putPushReg("edi");
-    gen.putJmpAddress(address);
+    gen.putJmpAddress(ptr(address));
     gen.flush();
     return code;
 }

@@ -42,8 +42,7 @@ class Vehicle {
         return Position;
     }
 
-    SetPosition(x, y, z) {
-        var Position = new Radmath.Vector(x, y, z);
+    SetPosition(Position) {
         return Vehicle._SetPosition(this._vehicle, Position.addr);
     }
 
@@ -72,7 +71,7 @@ class CoinManager {
     // FIXME, this doesnt work right
     static SpawnCoins(x, y, z, count) {
         var Position = new Radmath.Vector(x, y, z);
-        this._spawnCoins(this.GetInstance(), Position.addr, 0, count, Position.addr);
+        this._SpawnCoins(this.GetInstance(), Position.addr, 0, count, Position.addr);
     }
 
     static VehicleDestroyed(vehicle) {

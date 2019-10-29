@@ -64,12 +64,12 @@ Get into a car, and type this:
 
 ```
 var v = (new Character()).GetVehicle()
-var p = v.GetPosition().toArray()
+var p = v.GetPosition()
 
 // p is [x, y, z] co-ordinates of the car.
-p[2] += 10
+p.z += 10
 
-v.SetPosition.apply(v, p)
+v.SetPosition(p)
 ```
 
 Your car should jump 100 ft in the air.
@@ -81,11 +81,11 @@ easier when finished!
 // Find the active Controller
 var c = InputManager.GetController();
 
-// Say that button 'W' is now down (Note: 1 is button scheme on foot).
-c.GetMappable(1).UpdateButtonState(1.0, 7);
+// Say that button 'MoveUp' is now down
+c.GetMappable(1).ToggleKeyDown(Mappable.id.Character.MoveUp);
 
-// You can say it's up again like this.
-c.GetMappable(1).UpdateButtonState(0.0, 7);
+// Simulate a key press.
+c.SimulateKeyPress(Mappable.id.Character.Jump)
 ```
 
 # Notes
