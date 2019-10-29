@@ -6,13 +6,9 @@ This is a library to allow automating and manipulating the game Simpsons: Hit &
 Run with JavaScript. It uses the frida library to instrument and access
 internal state.
 
-[![Screenshot](doc/fuzzing-small.png)](doc/fuzzing.png)
-
-
 Want to see it in action? Here is an early demo video.
 
 [![Video](doc/video.png)](https://www.youtube.com/watch?v=cpmvSQ2l3Nc)
-
 
 # Installation
 
@@ -92,6 +88,11 @@ c.GetMappable(1).ToggleKeyDown(Mappable.id.Character.MoveUp);
 // Simulate a key press.
 c.SimulateKeyPress(Mappable.id.Character.Jump)
 ```
+
+
+[![Screenshot](doc/fuzzing-small.png)](doc/fuzzing.png)
+
+
 
 # Notes
 
