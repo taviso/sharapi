@@ -9,6 +9,11 @@ internal state.
 [![Screenshot](doc/fuzzing-small.png)](doc/fuzzing.png)
 
 
+Want to see it in action? Here is an early demo video.
+
+[![Video](doc/video.png)](https://www.youtube.com/watch?v=cpmvSQ2l3Nc)
+
+
 # Installation
 
 You need [frida](https://frida.re/) intalled, if you already have python it
