@@ -1,0 +1,30 @@
+import "./frida"
+import { Symbols } from "./Symbols"
+
+export class CommandLineOptions {
+    static flags = {
+        NOEFFECTS:      1,
+        NODIALOG:       2,
+        RANDOMBUTTONS:  12,
+    }
+
+    private static getOptionsPtr(): NativePointer {
+        return Symbols.ptr("CommandLineOptions::sOptions");
+    }
+
+    static getFlag(n: number): boolean {
+        return !! (CommandLineOptions.getOptionsPtr().readU64() & (1 << n))
+    }
+
+    static setFlag(n: number) {
+        CommandLineOptions.getOptionsPtr().writeU64(
+            CommandLineOptions.getOptionsPtr().readU64() | (1 << n)
+        );
+    }
+
+    static clearFlag(n: number) {
+        CommandLineOptions.getOptionsPtr().writeU64(
+            CommandLineOptions.getOptionsPtr().readU64() & ~(1 << n)
+        );
+    }
+}

@@ -10,46 +10,46 @@
 //     },
 //  });
 
-class Button {
-    static _TickCount = Symbol.ptr("Button::mTickCount");
+import "./frida"
+import { Symbols } from "./Symbols"
+import { Base } from "./Base"
+
+export class Button extends Base {
 
     constructor(state) {
-        this._button = Memory.alloc(8);
-        this._button.add(0).writeFloat(state);
-        this._button.add(4).writeU32(Button.TickCount);
+        super(Memory.alloc(8));
+        this.ptr.add(0).writeFloat(state);
+        this.ptr.add(4).writeU32(Button.TickCount);
     }
 
-    static get TickCount() {
-        return Button._TickCount.readU32();
+    static get TickCount(): number {
+        let _TickCount = Symbols.ptr("Button::mTickCount");
+        return _TickCount.readU32();
     }
 
-    get addr() {
-        return this._button;
+    get state(): number {
+        return this.ptr.add(0).readFloat();
     }
 
-    get state() {
-        return this._button.add(0).readFloat();
-    }
-
-    set state(value) {
-        return this._button.add(0).writeFloat(value);
+    set state(value: number) {
+        this.ptr.add(0).writeFloat(value);
     }
 }
 
-class Mapper {
-    static _GetLogicalIndex = Symbol.find("Mapper::GetLogicalIndex");
+export class Mapper extends Base {
     static MAX_BUTTONS = 0x53;
 
     constructor(ptr) {
-        this._mapper = ptr;
+        super(ptr);
     }
 
-    GetLogicalIndex(code) {
-        return Mapper._GetLogicalIndex(this._mapper, code);
+    GetLogicalIndex(code: number): number {
+        let _GetLogicalIndex = Symbols.find("Mapper::GetLogicalIndex");
+        return _GetLogicalIndex(this.ptr, code);
     }
 
-    GetCodeFromLogicalIndex(index) {
-        for (var i = 0; i < Mapper.MAX_BUTTONS; i++) {
+    GetCodeFromLogicalIndex(index): number {
+        for (let i = 0; i < Mapper.MAX_BUTTONS; i++) {
             if (this.GetLogicalIndex(i) == index)
                 return i;
         }
@@ -57,13 +57,7 @@ class Mapper {
     }
 }
 
-class Mappable {
-    static _DispatchOnButton = Symbol.find("Mappable::DispatchOnButton");
-    static _IsActive = Symbol.find("Mappable::IsActive");
-    static _IsButtonDown = Symbol.find("Mappable::IsButtonDown");
-    static _UpdateButtonState = Symbol.find("Mappable::UpdateButtonState");
-    static _GetActiveMapper = Symbol.find("Mappable::GetActiveMapper");
-
+export class Mappable extends Base {
     static id = {
         Camera: {
             CameraLeft:         17,
@@ -151,49 +145,54 @@ class Mappable {
     };
 
     constructor(ptr) {
-        this._mappable = ptr;
+        super(ptr);
     }
 
-    DispatchOnButton(code, state = 1.0) {
-        var b = new Button(state);
-        return Mappable._DispatchOnButton(this._mappable, 0, code, b.addr);
+    DispatchOnButton(code: number, state = 1.0): void {
+        let _DispatchOnButton = Symbols.find("Mappable::DispatchOnButton");
+        let b = new Button(state);
+        _DispatchOnButton(this.ptr, 0, code, b.toPointer());
     }
 
-    IsActive() {
-        return !! Mappable._IsActive(this._mappable);
+    IsActive(): boolean {
+        let _IsActive = Symbols.find("Mappable::IsActive");
+        return !! _IsActive(this.ptr);
     }
 
-    IsButtonDown(index) {
-        return !! Mappable._IsButtonDown(index, this._mappable);
+    IsButtonDown(index: number): boolean {
+        let _IsButtonDown = Symbols.find("Mappable::IsButtonDown");
+        return !! _IsButtonDown(index, this.ptr);
     }
 
     // This kinda works, I don't know what the last parameter is, it doesn't
     // seem to be used.
-    UpdateButtonState(index, state = 1.0) {
-        var b = new Button(state);
-        return Mappable._UpdateButtonState(this._mappable, b.addr, index, 0);
+    UpdateButtonState(index: number, state = 1.0) {
+        let _UpdateButtonState = Symbols.find("Mappable::UpdateButtonState");
+        let b = new Button(state);
+        _UpdateButtonState(this.ptr, b.toPointer(), index, 0);
     }
 
-    GetActiveMapper() {
-        return new Mapper(Mappable._GetActiveMapper(this._mappable));
+    GetActiveMapper(): Mapper {
+        let _GetActiveMapper = Symbols.find("Mappable::GetActiveMapper");
+        return new Mapper(_GetActiveMapper(this.ptr));
     }
 
     // Convenience Function to press Jump/Attack/etc
-    SimulateKeyPress(key) {
+    SimulateKeyPress(key, duration=0.1): boolean {
         var code = this.GetActiveMapper().GetCodeFromLogicalIndex(key);
 
         if (code < 0)
             return false;
 
         this.DispatchOnButton(code, 1.0);
-        Thread.sleep(0.1);
+        Thread.sleep(duration);
         this.DispatchOnButton(code, 0.0);
 
         return true;
     }
 
     // Convenience Function to toggle key status, for Move/Sprint/etc.
-    ToggleKeyDown(key) {
+    ToggleKeyDown(key): number {
         if (this.IsButtonDown(key)) {
             this.UpdateButtonState(key, 0.0);
             return 0;
@@ -204,35 +203,39 @@ class Mappable {
     }
 }
 
-class UserController {
+export class UserController extends Base {
     constructor(ptr) {
-        this._controller = ptr;
+        super(ptr);
     }
 
-    GetMappable(num) {
-        return new Mappable(this._controller
+    GetMappable(num: number): Mappable {
+        return new Mappable(this
+            .ptr
             .add(0x3c)
             .add(num * 4)
             .readPointer());
     }
 }
 
-class InputManager
-{
-    static _GetInstance = Symbol.find("InputManager::GetInstance");
-    static _GetController = Symbol.find("InputManager::GetController");
+export class InputManager extends Base {
 
-    static GetInstance() {
-        return this._GetInstance();
+    constructor() {
+        super(InputManager.GetInstance());
     }
 
-    static GetController(num = 0) {
-        return new UserController(this._GetController(this._GetInstance(), num));
+    static GetInstance(): NativePointer {
+        let _GetInstance = Symbols.find("InputManager::GetInstance");
+        return _GetInstance();
+    }
+
+    static GetController(num = 0): UserController {
+        let _GetController = Symbols.find("InputManager::GetController");
+        return new UserController(_GetController(this.GetInstance(), num));
     }
 
     // FIXME: I don't know what this thing is.
-    static GetContext() {
-        return this._GetInstance().add(0x8).readU32();
+    GetContext(): number {
+        return this.ptr.add(0x8).readU32();
     }
 }
 

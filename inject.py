@@ -10,7 +10,7 @@ def main(target_process):
     session.enable_jit()
     session.enable_debugger()
 
-    data = open('scriptfile.out.js', 'r').read();
+    data = open('scriptfile.out.js', 'r', encoding="utf8").read();
 
     script = session.create_script(data)
     script.on('message', on_message)

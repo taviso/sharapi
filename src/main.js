@@ -47,7 +47,7 @@ function BeginFuzz()
 
 // Interceptors are buggy on Windows if you intercept functions called via NativeFunction()
 //
-// Interceptor.attach(Symbol.find("CoinManager::AdjustBankValue"), {
+// Interceptor.attach(Symbols.find("CoinManager::AdjustBankValue"), {
 //    onEnter: function (args) {
 //        console.log("CoinManager::AdjustBankValue() count=" + this.context.ecx.toInt32())
 //    },

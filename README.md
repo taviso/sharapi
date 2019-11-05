@@ -41,7 +41,7 @@ If you don't have WSL, you can do this instead:
 Run the game `Simpsons.exe`, you can use the launcher if you like, and type this:
 
 
-```
+```bash
 python.exe inject.py Simpsons.exe
 ```
 
@@ -55,7 +55,7 @@ Try it out!
 
 Type this:
 
-```
+```javascript
 CoinManager.SpawnInstantCoins(0, 0, 0, 10)
 ```
 
@@ -63,7 +63,7 @@ Some coins should fly towards you.
 
 Get into a car, and type this:
 
-```
+```javascript
 var v = (new Character()).GetVehicle()
 var p = v.GetPosition()
 
@@ -78,7 +78,7 @@ Your car should jump 100 ft in the air.
 Simulate keyboard input events. Note: I'm working on this API, it will be
 easier when finished!
 
-```
+```javascript
 // Find the active Controller
 var c = InputManager.GetController();
 
@@ -89,6 +89,15 @@ c.GetMappable(1).ToggleKeyDown(Mappable.id.Character.MoveUp);
 c.SimulateKeyPress(Mappable.id.Character.Jump)
 ```
 
+```javascript
+// Find the nearest road
+var pos = (new Character()).GetVehicle().GetPosition()
+var road = IntersectManager.FindClosestRoad(pos, 100)
+// > road.distance
+// 1.2074013948440552
+// > road.road.GetCorner(0).toArray()
+// (3) [-158.1009521484375, 211.06436157226562, 3.2667016983032227]
+```
 
 [![Screenshot](doc/fuzzing-small.png)](doc/fuzzing.png)
 
