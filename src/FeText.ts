@@ -6,7 +6,7 @@ export class tName extends Base {
     private name: NativePointer;
 
     constructor(str: string) {
-        let Init: NativeFunction = Symbols.find("tName::Init");
+        let Init = Symbols.find("tName::Init");
 
         super(Memory.alloc(0xC));
         this.name = Memory.allocAnsiString(str);
@@ -54,14 +54,13 @@ class FeTextScroobyDrawable extends Base {
     }
 
     Display(): void {
-        let _Display: NativeFunction = this.getVirtual(0, 'void', ['pointer']);
+        let _Display = this.getVirtual(0, 'void', ['pointer']);
         _Display(this.ptr);
     }
 
 
     SetColour(color: number): void {
-        let _SetColour: NativeFunction;
-        _SetColour = this.getVirtual(17, 'void', ['pointer', 'int']);
+        let _SetColour = this.getVirtual(17, 'void', ['pointer', 'int']);
         _SetColour(this.ptr, color);
     }
 }
@@ -75,7 +74,7 @@ export class FeText extends Base {
     constructor(name: string, x: number, y: number) {
         let n: tName = new tName(name);
         let p: NativePointer = Memory.alloc(0x120);
-        let _Init: NativeFunction = Symbols.find("FeText::Init");
+        let _Init = Symbols.find("FeText::Init");
 
         _Init(p, n.toPointer(), x, y, 1);
 
@@ -86,7 +85,7 @@ export class FeText extends Base {
     }
 
     AddHardCodedString(str: string): void {
-        let _AddHardCodedString: NativeFunction = Symbols.find("FeText::AddHardCodedString");
+        let _AddHardCodedString = Symbols.find("FeText::AddHardCodedString");
         _AddHardCodedString(this.ptr, Memory.allocAnsiString(str));
         return;
     }
@@ -108,7 +107,7 @@ export class FeText extends Base {
     }
 
     SetTextStyle(font: string): void {
-        let _SetTextStyle: NativeFunction = Symbols.find("FeText::SetTextStyle");
+        let _SetTextStyle = Symbols.find("FeText::SetTextStyle");
         _SetTextStyle(this.ptr, Memory.allocAnsiString(font));
     }
 }
@@ -119,7 +118,7 @@ class FeTextFeParent extends Base {
     }
 
     Resize(size: number) {
-        let _Resize: NativeFunction = Symbols.find("FeParent::Resize");
+        let _Resize = Symbols.find("FeParent::Resize");
         return _Resize(this.ptr, size);
     }
 }
@@ -154,27 +153,27 @@ class FeTextScroobyText extends Base {
     }
 
     SetIndex(index: number): void {
-        let _SetIndex: NativeFunction = this.getVirtual(2, 'void', ['pointer', 'int']);
+        let _SetIndex = this.getVirtual(2, 'void', ['pointer', 'int']);
         _SetIndex(this.ptr, index);
     }
 
     SetDisplayShadow(status: boolean): void {
-        let _SetDisplayShadow: NativeFunction = this.getVirtual(16, 'void', ['pointer', 'bool']);
+        let _SetDisplayShadow = this.getVirtual(16, 'void', ['pointer', 'bool']);
         _SetDisplayShadow(this.ptr, +status);
     }
 
     IsDisplayingShadow(): boolean {
-        let _IsDisplayingShadow: NativeFunction = this.getVirtual(17, 'bool', ['pointer']);
+        let _IsDisplayingShadow = this.getVirtual(17, 'bool', ['pointer']);
         return _IsDisplayingShadow(this.ptr);
     }
 
     SetShadowOffset(x: number, y: number): void {
-        let _SetShadowOffset: NativeFunction = this.getVirtual(18, 'void', ['pointer', 'int', 'int']);
+        let _SetShadowOffset = this.getVirtual(18, 'void', ['pointer', 'int', 'int']);
         _SetShadowOffset(this.ptr, x, y);
     }
 
     SetShadowColour(color: number): void {
-        let _SetShadowColour: NativeFunction = this.getVirtual(21, 'void', ['pointer', 'int']);
+        let _SetShadowColour = this.getVirtual(21, 'void', ['pointer', 'int']);
         _SetShadowColour(this.ptr, color);
     }
 }

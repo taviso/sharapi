@@ -1,7 +1,7 @@
 // This file is based on http://www.frida.re/docs/javascript-api
 // Originally from https://github.com/frida-spectre/typed-frida
 
-declare function hexdump(target, options?);
+declare function hexdump(target: NativePointer, options?: object);
 declare function int64(v): Int64;
 declare function uint64(v): UInt64;
 declare function ptr(v): NativePointer;
@@ -76,7 +76,7 @@ declare namespace MemoryAccessMonitor {
 
 declare namespace Thread {
     function backtrace(context?, backtracer?: Backtracer);
-    function sleep(delay);
+    function sleep(delay: number);
 }
 
 declare enum Backtracer {

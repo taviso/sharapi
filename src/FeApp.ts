@@ -149,7 +149,7 @@ class FePageScroobyPage extends Base {
     }
 
     GetLayerByIndex(index): FeLayerScroobyDrawable {
-        let _GetLayerByIndex: NativeFunction = this.getVirtual(5, 'pointer', ['pointer', 'int']);
+        let _GetLayerByIndex = this.getVirtual(5, 'pointer', ['pointer', 'int']);
         let layer: NativePointer = _GetLayerByIndex(this.ptr, index);
         let idx: number = layer.readPointer().add(4).readU32();
         return new FeLayer.Scrooby.Drawable(layer.add(idx));
@@ -162,12 +162,12 @@ class FeProjectScroobyProject extends Base {
     }
 
     GetCurrentScreen(): FeScreenScroobyScreen {
-        let _GetCurrentScreen: NativeFunction = this.getVirtual(0, 'pointer', ['pointer']);
+        let _GetCurrentScreen = this.getVirtual(0, 'pointer', ['pointer']);
         return new FeScreenScroobyScreen(_GetCurrentScreen(this.ptr));
     }
 
     GetScreenCount(): number {
-        let _GetScreenCount: NativeFunction = this.getVirtual(8, 'int', ['pointer']);
+        let _GetScreenCount = this.getVirtual(8, 'int', ['pointer']);
         return _GetScreenCount(this.ptr);
     }
 }
