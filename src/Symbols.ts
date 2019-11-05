@@ -243,10 +243,15 @@ export class Symbols {
         if (!Symbols.map[name])
             throw "Unknown Symbol " + name;
 
-        return new NativeFunction(Symbols.map[name].address,
+        if (Symbols.map[name].cached)
+            return Symbols.map[name].cached;
+
+        return Symbols.map[name].cached = new NativeFunction(
+            Symbols.map[name].address,
             Symbols.map[name].returnType,
             Symbols.map[name].argTypes,
-            Symbols.map[name].abi);
+            Symbols.map[name].abi
+        );
     }
     static addr(name: string):  number {
         return Symbols.map[name].address.toInt32();
