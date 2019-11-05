@@ -1,2 +1,7 @@
 .*.sw?
 *.out.js
+sharapi.js
+src/*.js
+!src/System.js
+!src/import.js
+!src/main.js
