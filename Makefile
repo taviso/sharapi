@@ -1,4 +1,4 @@
-TSFLAGS=--target ES5 --module es6 --allowJs
+TSFLAGS=--target ES5 --module es6
 RUFLAGS=--format system --context global
 
 .PHONY: clean
@@ -18,7 +18,7 @@ all: scriptfile.out.js
 clean:
 	rm -f *.out.js sharapi.js src/frida.js $(TSFILES:.ts=.js)
 
-src/frida.js:
+src/frida.js: src/frida.d.ts
 	touch $@
 
 sharapi.js: src/import.js src/frida.js $(TSFILES:.ts=.js)
