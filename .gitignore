@@ -1,9 +1,9 @@
 .*.sw?
 *.out.js
 .vscode
+node_modules
 sharapi.js
 src/*.js
 src/.*.sw?
 !src/System.js
-!src/import.js
 !src/main.js
