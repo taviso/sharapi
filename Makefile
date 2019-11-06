@@ -1,4 +1,4 @@
-TSFLAGS=--target ES5 --module es6 --lib es6,dom --skipLibCheck --noEmitOnError
+TSFLAGS=--target ES5 --module es6 --lib es6,dom --noEmitOnError
 RUFLAGS=--format system --context global
 
 .PHONY: clean
@@ -15,11 +15,13 @@ TSFILES=src/Base.ts src/FeApp.ts src/FeText.ts src/usercall.ts  \
 
 all: scriptfile.out.js
 
+
 %.js: %.ts
 	tsc $(TSFLAGS) $<
 
 clean:
-	rm -f *.out.js exports.js sharapi.js src/frida.js src/import.js $(TSFILES:.ts=.js)
+	rm -f *.out.js exports.js sharapi.js src/frida.js src/import.js
+	rm -f $(TSFILES:.ts=.js)
 
 exports.js: TSFLAGS+=--module commonjs
 
@@ -29,7 +31,9 @@ src/import.js: exports.js
 src/frida.js: src/frida.d.ts
 	touch $@
 
-sharapi.js: src/import.js src/frida.js $(TSFILES:.ts=.js)
+# tsc is sloooooooow to startup, try to bundle prereqs into one command.
+sharapi.js: src/import.js src/frida.js $(TSFILES)
+	tsc $(TSFLAGS) $(filter %.ts,$^)
 	rollup $(RUFLAGS) $< --file $@
 
 scriptfile.out.js: src/System.js sharapi.js src/main.js
