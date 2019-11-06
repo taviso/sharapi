@@ -1,10 +1,9 @@
 // This file is based on http://www.frida.re/docs/javascript-api
-// Originally from https://github.com/frida-spectre/typed-frida
 
-declare function hexdump(target: NativePointer, options?: object);
-declare function int64(v): Int64;
-declare function uint64(v): UInt64;
-declare function ptr(v): NativePointer;
+declare function hexdump(target: NativePointer, options?: object): void;
+declare function int64(v: string | number): Int64;
+declare function uint64(v: string | number): UInt64;
+declare function ptr(v: string | number): NativePointer;
 declare var NULL: NativePointer;
 
 // TODO: recv([type, ]callback)
@@ -168,7 +167,7 @@ declare class NativePointer {
     writeFloat(value: number);
     // writeDouble(address, value);
     // readS64(address): Int64;
-    readU64(): number;
+    readU64(): UInt64;
     // readLong(address): Int64;
     // readULong(address): UInt64;
     // writeS64(address, value: Int64);
@@ -187,11 +186,14 @@ declare class NativePointer {
 }
 
 interface NativeFunction {
-    (...args): any;
+    (...args: Array<NativePointer|number|boolean>);
 }
 
 declare class NativeFunction extends NativePointer {
-    constructor(address, returnType, argTypes, abi?);
+    constructor(address: NativePointer,
+                returnType: string,
+                argTypes: Array<string>,
+                abi?: string);
 }
 
 declare class NativeCallback extends NativePointer {
@@ -239,8 +241,12 @@ declare class Win32OutputStream extends OutputStream {
 // declare class File {
 // }
 
+declare interface InvocationListener {
+    detach(): void;
+}
+
 declare namespace Interceptor {
-    function attach(target: NativePointer, callbacks: { onEnter: (args) => void, onLeave: (retval: NativePointer) => void });
+    function attach(target: NativePointer, callbacks: { onEnter: (args) => void, onLeave: (retval: NativePointer) => void }): InvocationListener;
     function detachAll();
     function replace(target: NativePointer, replacement: NativeCallback);
     function revert(target: NativePointer);

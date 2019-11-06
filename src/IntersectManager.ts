@@ -3,29 +3,27 @@ import { Symbols } from "./Symbols"
 import { Base } from "./Base"
 import { Vector } from "./Radmath"
 import { RoadSegment } from "./RoadSegment"
+import { InstDynaPhysDSG } from "./InstDynaPhysDSG"
 
-export class ReserveArray extends Base {
-    private array: NativePointer;
+export class ReserveArray<T extends Base> extends Base {
+    private type: {new(p: NativePointer): T;};
 
-    constructor(n?: NativePointer | number) {
+    /**
+     * 
+     * @param n An element count, or pointer to convert into a ReserveArray.
+     * @param type Class to convert elements to.
+     */
+    constructor(type: {new(p: NativePointer): T;}, n: NativePointer | number = 0) {
         if (n instanceof NativePointer) {
             super(n);
-            return;
-        }
-        if (n === undefined) {
+        } else {
+            let array = n ? Memory.alloc(n * 4) : NULL;
             super(Memory.alloc(0xC));
-            this.ptr.add(0).writeU32(0);
+            this.ptr.add(0).writeU32(n);
             this.ptr.add(4).writeU32(0);
-            this.ptr.add(8).writePointer(NULL);
-            return;
+            this.ptr.add(8).writePointer(array);
         }
-
-        super(Memory.alloc(0xC));
-
-        this.array = Memory.alloc(n * 4)
-        this.ptr.add(0).writeU32(n);
-        this.ptr.add(4).writeU32(0);
-        this.ptr.add(8).writePointer(this.array);
+        this.type = type;
     }
 
     get maxOccupancy(): number {
@@ -36,12 +34,12 @@ export class ReserveArray extends Base {
         return this.ptr.add(4).readU32();
     }
 
-    getIndex(index: number): NativePointer {
-        return this.ptr.add(8).readPointer().add(index * 4).readPointer();
+    private getIndex(index: number): T {
+        return new this.type(this.ptr.add(8).readPointer().add(index * 4).readPointer());
     }
 
-    toArray(): Array<NativePointer> {
-        let all: Array<NativePointer> = [];
+    private toArray(): Array<T> {
+        let all: Array<T> = [];
         for (let i: number = 0; i < this.currentOccupancy; i++)
             all.push(this.getIndex(i));
         return all;
@@ -51,29 +49,6 @@ export class ReserveArray extends Base {
 export class PhysDSG extends Base {
     constructor(ptr: NativePointer) {
         super(ptr);
-    }
-
-    GetPosition(): Vector {
-        let _GetPosition = Symbols.find("StaticPhysDSG::GetPosition");
-        let position = new Vector();
-        _GetPosition(this.ptr, position.toPointer())
-        return position;
-    }
-}
-
-export class DynaPhysDsg extends Base {
-    constructor(ptr: NativePointer) {
-        super(ptr);
-    }
-
-    IsAtRest(): boolean {
-        let _IsAtRest = Symbols.find("DynaPhysDSG::IsAtRest");
-        return _IsAtRest(this.ptr);
-    }
-
-    ApplyForce(direction: Vector, magnitude: number) {
-        let _ApplyForce = Symbols.find("DynaPhysDSG::ApplyForce");
-        _ApplyForce(this.ptr, direction.toPointer(), magnitude);
     }
 
     GetPosition(): Vector {
@@ -96,7 +71,6 @@ export class AnimCollisionEntityDSG extends Base {
         return position;
     }
 }
-
 
 export class IntersectManager extends Base {
     //static _FindClosestAnyRoad;
@@ -127,9 +101,9 @@ export class IntersectManager extends Base {
         return new RoadSegment(segment.readPointer());
     }
 
-    FindStaticPhysElems(position: Vector, maxDistance: number): ReserveArray {
+    FindStaticPhysElems(position: Vector, maxDistance: number): ReserveArray<PhysDSG> {
         let _FindStaticPhysElems = Symbols.find("IntersectManager::FindStaticPhysElems");
-        let nodes = new ReserveArray(NULL);
+        let nodes = new ReserveArray<PhysDSG>(PhysDSG);
 
         _FindStaticPhysElems(this.ptr,
                              nodes.toPointer(),
@@ -138,9 +112,9 @@ export class IntersectManager extends Base {
         return nodes;
     }
 
-    FindDynaPhysElems(position: Vector, maxDistance: number): ReserveArray {
+    FindDynaPhysElems(position: Vector, maxDistance: number): ReserveArray<InstDynaPhysDSG> {
         let _FindDynaPhysElems = Symbols.find("IntersectManager::FindDynaPhysElems");
-        let nodes = new ReserveArray(NULL);
+        let nodes = new ReserveArray<InstDynaPhysDSG>(InstDynaPhysDSG);
         _FindDynaPhysElems(this.ptr,
                            position.toPointer(),
                            maxDistance,
@@ -148,9 +122,9 @@ export class IntersectManager extends Base {
         return nodes;
     }
 
-    FindAnimPhysElems(position: Vector, maxDistance: number): ReserveArray {
+    FindAnimPhysElems(position: Vector, maxDistance: number): ReserveArray<AnimCollisionEntityDSG> {
         let _FindAnimPhysElems = Symbols.find("IntersectManager::FindAnimPhysElems");
-        let nodes = new ReserveArray(NULL);
+        let nodes = new ReserveArray<AnimCollisionEntityDSG>(AnimCollisionEntityDSG);
 
         _FindAnimPhysElems(this.ptr,
                            position.toPointer(),

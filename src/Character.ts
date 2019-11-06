@@ -1,15 +1,13 @@
 import "./frida"
-import { Symbols } from "./Symbols"
-import { Base } from "./Base"
 import { Vehicle } from "./Vehicle"
-import { CharacterManager } from "./CharacterManager"
+import { InstDynaPhysDSG } from "./InstDynaPhysDSG"
 
-
-export class Character extends Base {
-    constructor(num = 0) {
-        let manager = CharacterManager.GetInstance();
-        let character = manager.add(0xC0 + num * 4).readPointer();
-        super(character);
+/**
+ * The active character, instantiate from CharacterManager.
+ */
+export class Character extends InstDynaPhysDSG {
+    constructor(p: NativePointer) {
+        super(p);
     }
 
     GetVehicle(): Vehicle {

@@ -13,18 +13,18 @@ export class CommandLineOptions {
     }
 
     static getFlag(n: number): boolean {
-        return !! (CommandLineOptions.getOptionsPtr().readU64() & (1 << n))
+        return !! (CommandLineOptions.getOptionsPtr().readU64().toNumber() & (1 << n))
     }
 
     static setFlag(n: number) {
         CommandLineOptions.getOptionsPtr().writeU64(
-            CommandLineOptions.getOptionsPtr().readU64() | (1 << n)
+            CommandLineOptions.getOptionsPtr().readU64().toNumber() | (1 << n)
         );
     }
 
     static clearFlag(n: number) {
         CommandLineOptions.getOptionsPtr().writeU64(
-            CommandLineOptions.getOptionsPtr().readU64() & ~(1 << n)
+            CommandLineOptions.getOptionsPtr().readU64().toNumber() & ~(1 << n)
         );
     }
 }

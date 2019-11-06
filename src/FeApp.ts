@@ -143,12 +143,19 @@ class FePageScroobyPage extends Base {
         super(p);
     }
 
-    GetNumberOfLayers() {
+    /**
+     * Total number of layers on this page.
+     */
+    GetNumberOfLayers(): number {
         var _GetNumberOfLayers = this.getVirtual(2, 'int', ['pointer']);
         return _GetNumberOfLayers(this.ptr);
     }
 
-    GetLayerByIndex(index): FeLayerScroobyDrawable {
+    /**
+     * Fetch an FeLayer::Scrooby::Drawable child object.
+     * @param index Zero indexed layer to retrieve.
+     */
+    GetLayerByIndex(index: number): FeLayerScroobyDrawable {
         let _GetLayerByIndex = this.getVirtual(5, 'pointer', ['pointer', 'int']);
         let layer: NativePointer = _GetLayerByIndex(this.ptr, index);
         let idx: number = layer.readPointer().add(4).readU32();

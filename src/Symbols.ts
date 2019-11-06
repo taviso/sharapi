@@ -237,6 +237,24 @@ export class Symbols {
             returnType: 'pointer',
             argTypes:   [],
             abi:        'stdcall',
+        },
+        "tName::MakeUID": {
+            address:    ptr(0x56f3D0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'cdecl',
+        },
+        "AvatarManager::GetInstance": {
+            address:    ptr(0x4D7A30),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall',
+        },
+        "AvatarManager::GetAvatarForPlayer": {
+            address:    userpurge(["ecx", "eax"], 2, 0x4d7f40),
+            returnType: 'pointer',
+            argTypes:   ['pointer', 'int'],
+            abi:        'stdcall',
         }
     };
     static find(name: string): NativeFunction {
@@ -258,5 +276,21 @@ export class Symbols {
     }
     static ptr(name: string) : NativePointer {
         return Symbols.map[name].address;
+    }
+
+    /**
+     * Convenient wrapper to lookup and call a symbol in one call.
+     * @param name Symbol to call.
+     * @param args Parameters to subroutine.
+     */
+    static call<T>(name: string, ...args: Array<NativePointer | number | boolean>): T {
+        let func = Symbols.find(name);
+
+        // There seems to be a bug with .apply on zero-arg NativeFunction objects.
+        if (args.length == 0) {
+            return <T>func();
+        }
+
+        return <T>func.apply(func, args);
     }
 }
