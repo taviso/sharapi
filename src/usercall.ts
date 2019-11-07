@@ -19,6 +19,13 @@
 
 import "./frida"
 
+/**
+ * Generate a stub to call native userpurge functions.
+ * @param convention Array of registers used as parameter in order.
+ * @param params Total parameters, including stack and register arguments.
+ * @param address Address of the thiscall function.
+ * @param result Register where the return value is stored.
+ */
 export function userpurge(convention: Array<string>,
                           params: number,
                           address: number,
@@ -35,6 +42,7 @@ export function userpurge(convention: Array<string>,
 
     // Recreate call stack
     for (var i = 0; i < params; i++) {
+        // push dword [esp+n]
         gen.putBytes(new Uint8Array([ 0xFF, 0x74, 0x24]))
         gen.putU8(4 * 4 + 4 * params);
     }
@@ -59,7 +67,7 @@ export function userpurge(convention: Array<string>,
     gen.putRet();
     gen.flush();
 
-    console.log("userpurge(), params=", params, "size=", gen.offset, "addr=", code.toJSON());
+    console.log("userpurge(), params=", params, "size=", gen.offset, "addr=", code.toString());
     return code;
 }
 

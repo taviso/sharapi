@@ -9,7 +9,7 @@ export class CommandLineOptions {
     }
 
     private static getOptionsPtr(): NativePointer {
-        return Symbols.ptr("CommandLineOptions::sOptions");
+        return Symbols.addr("CommandLineOptions::sOptions");
     }
 
     static getFlag(n: number): boolean {

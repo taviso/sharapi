@@ -6,7 +6,7 @@ export class Base {
     private vftable: NativePointer;
 
     constructor(p: NativePointer) {
-        if (!p || p == NULL)
+        if (!p || p == NULL || p.toInt32() == 0)
             throw "Constructing class with NULL pointer";
 
         console.log(this.constructor['name'], "@", p.toString());

@@ -8,7 +8,7 @@ export class Debug {
 
         console.log("Logging UIDs to", filename);
 
-        return Interceptor.attach(Symbols.ptr("tName::MakeUID"), {
+        return Interceptor.attach(Symbols.addr("tName::MakeUID"), {
             onEnter: function (args: Array<NativePointer>) {
                 this.hashAddr   = args[0];
                 this.gameStr    = args[1].readCString();

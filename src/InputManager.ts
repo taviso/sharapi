@@ -23,7 +23,7 @@ export class Button extends Base {
     }
 
     static get TickCount(): number {
-        let _TickCount = Symbols.ptr("Button::mTickCount");
+        let _TickCount = Symbols.addr("Button::mTickCount");
         return _TickCount.readU32();
     }
 

@@ -1,5 +1,7 @@
 // This file is based on http://www.frida.re/docs/javascript-api
 
+type bool = number;
+
 declare function hexdump(target: NativePointer, options?: object): void;
 declare function int64(v: string | number): Int64;
 declare function uint64(v: string | number): UInt64;
@@ -59,7 +61,7 @@ declare namespace Module {
 declare namespace Memory {
     function scan(address, size, pattern, callbacks: { onMatch: (address, size) => string, onError: (reason) => void, onComplete: () => void });
     function scanSync(address, size, pattern);
-    function alloc(size);
+    function alloc(size): NativePointer;
     function copy(dst, src, n);
     function dup(address, size);
     function protect(address, size, protection);
@@ -183,10 +185,11 @@ declare class NativePointer {
     // writeUtf8String(address, str);
     // writeUtf16String(address, str);
     // writeAnsiString(address, str);
+    toJSON(): string;
 }
 
 interface NativeFunction {
-    (...args: Array<NativePointer|number|boolean>);
+    (...args: Array<NativePointer|number>);
 }
 
 declare class NativeFunction extends NativePointer {

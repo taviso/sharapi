@@ -4,7 +4,7 @@ import { Symbols } from "./Symbols";
 let NameCache = new Map();
 let FenceDSGCount = 0;
 
-Interceptor.attach(Symbols.ptr("tName::MakeUID"), {
+Interceptor.attach(Symbols.addr("tName::MakeUID"), {
     onEnter: function (args: Array<NativePointer>): void {
         this.hashAddr   = args[0];
         this.gameStr    = args[1];

@@ -3,7 +3,7 @@ import "./frida"
 import { usercall, userpurge } from "./usercall"
 
 export class Symbols {
-    static map: any = {
+    static map = {
         "CharacterManager::GetInstance": {
             address:    ptr(0x4fa5a0),
             returnType: 'pointer',
@@ -255,6 +255,156 @@ export class Symbols {
             returnType: 'pointer',
             argTypes:   ['pointer', 'int'],
             abi:        'stdcall',
+        },
+        "Avatar::GetCharacter": {
+            address:    userpurge(["eax"], 1, 0x4a7900),
+            returnType: 'pointer',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetVehicle": {
+            address:    userpurge(["eax"], 1, 0x4C7800),
+            returnType: 'pointer',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetCharacter": {
+            address:    userpurge(["ecx", "edx"], 2, 0x4d70c0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetVehicle": {
+            address:    userpurge(["edi", "esi"], 2, 0x4d7100),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetInCarController": {
+            address:    ptr(0x4D7180),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetCameraTargetToVehicle": {
+            address:    userpurge(["esi"], 2, 0x4d72f0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'bool'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetIntoVehicleStart": {
+            address:    userpurge(["eax"], 2, 0x4D7360),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetIntoVehicleEnd": {
+            address:    userpurge(["eax"], 2, 0x4d7440),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetOutOfVehicleStart": {
+            address:    userpurge(["edi"], 2, 0x4d7460),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall'
+        },
+        "Avatar::SetOutOfCarController": {
+            address:    ptr(0x4d74f0),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetCameraTargetToCharacter": {
+            address:    userpurge(["esi"], 2, 0x4d75e0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'bool'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetOutOfVehicleEnd": {
+            address:    userpurge(["ebx", "eax"], 2, 0x4D7630),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::IsInCar": {
+            address:    userpurge(["eax"], 1, 0x4d76d0),
+            returnType: 'bool',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetPosition": {
+            address:    userpurge(["eax", "esi"], 2, 0x4d76f0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetVelocity": {
+            address:    userpurge(["eax", "esi"], 2, 0x4D7780),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::OnCheatEntered": {
+            address:    ptr(0x4D77F0),
+            returnType: 'void',
+            argTypes:   ['int', 'bool'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetLastPathInfo": {
+            address:    ptr(0x4d7820),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetSpeedMps": {
+            address:    userpurge(["esi"], 1, 0x4d77c0),
+            returnType: 'float',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetRaceInfo": {
+            address:    userpurge(["eax", "edx"], 4, 0x4D79B0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetRaceInfo": {
+            address:    userpurge(["eax", "edx"], 4, 0x4d79d4),
+            returnType: 'void',
+            argTypes:   ['pointer', 'int', 'float', 'int'],
+            abi:        'stdcall',
+        },
+        "Avatar::Update": {
+            address:    userpurge(["eax"], 2, 0x4d7810),
+            returnType: 'void',
+            argTypes:   ['pointer', 'float'],
+            abi:        'stdcall',
+        },
+        "Avatar::SetControllerId": {
+            address:    userpurge(["eax", "ecx"], 2, 0x4d70b0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'int'],
+            abi:        'stdcall',
+        },
+        "Avatar::GetHeading": {
+            address:    userpurge(["edi", "eax"], 2, 0x4d7750),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "Character::RelocateAndReset": {
+            address:    ptr(0x4f38d0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'float', 'bool', 'bool'],
+            abi:        'stdcall',
+        },
+        "AvatarManager::PutCharacterOnGround": {
+            address:    userpurge(["eax"], 3, 0x4d80e0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'pointer'],
+            abi:        'stdcall',
         }
     };
     static find(name: string): NativeFunction {
@@ -271,10 +421,7 @@ export class Symbols {
             Symbols.map[name].abi
         );
     }
-    static addr(name: string):  number {
-        return Symbols.map[name].address.toInt32();
-    }
-    static ptr(name: string) : NativePointer {
+    static addr(name: string): NativePointer {
         return Symbols.map[name].address;
     }
 
@@ -287,6 +434,7 @@ export class Symbols {
         let func = Symbols.find(name);
 
         // There seems to be a bug with .apply on zero-arg NativeFunction objects.
+        // https://github.com/frida/frida/issues/1074
         if (args.length == 0) {
             return <T>func();
         }

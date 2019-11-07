@@ -1,5 +1,6 @@
 .*.sw?
 *.out.js
+exports.js
 .vscode
 node_modules
 sharapi.js

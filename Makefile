@@ -1,4 +1,4 @@
-TSFLAGS=--target ES5 --module es6 --lib es6,dom --noEmitOnError
+TSFLAGS=--target ES5 --module es6 --lib es6,dom --noEmitOnError --alwaysStrict
 RUFLAGS=--format system --context global
 
 .PHONY: clean
