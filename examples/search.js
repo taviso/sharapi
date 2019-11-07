@@ -25,7 +25,7 @@ console.log("character is at", character.GetPosition().toArray())
 
 // Search for nearby objects
 for (let radius = 1; radius < 100; radius++) {
-    var object;
+    var objects;
     let elements = intersectManager.FindDynaPhysElems(
         character.GetPosition(),
         radius
@@ -37,16 +37,54 @@ for (let radius = 1; radius < 100; radius++) {
     if (elements.currentOccupancy < 2)
         continue;
     
-    object = elements.getIndex(2);
+    // Dump objects found
+    objects = elements.toArray();
 
-    console.log("found object", object.getName());
-    console.log("at", object.GetPosition().toArray());
+    objects.forEach((a) => console.log(`Found ${a.getName()} at ${a.GetPosition().toArray()}`));
+
+    if (objects[1].getName() == "homer")
+        continue;
+
     break;
 }
 
-// avatar.GetHeading().toArray()
-// sendinput...
-// walk
-// check location
-// adjust
-// etc.
+let object = objects[1];
+let objectLocation = object.GetPosition();
+let myLocation = new Vector(character.rPosition);
+while (Math.abs(myLocation.x - objectLocation.x) > 1
+    || Math.abs(myLocation.z - objectLocation.z) > 1) {
+    let prevX = Math.abs(myLocation.x - objectLocation.x);
+    let prevZ = Math.abs(myLocation.z - objectLocation.z);
+
+    console.log("at", myLocation.toArray(), "looking for", object.getName());
+
+    step();
+
+    if (prevX < Math.abs(myLocation.x - objectLocation.x)
+     || prevZ < Math.abs(myLocation.z - objectLocation.z)) {
+        rotate();
+    }
+
+    Thread.sleep(0.2);
+}
+
+console.log("reached object")
+
+for (var i = 0; i < 10; i++) {
+    kick();
+    Thread.sleep(0.2);
+}
+
+function kick() {
+    input.SimulateKeyPress(Mappable.id.Character.Attack);
+}
+
+function jump() {
+    input.SimulateKeyPress(Mappable.id.Character.Jump);
+}
+function step() {
+    input.SimulateKeyPress(Mappable.id.Character.MoveUp);
+}
+function rotate() {
+    input.SimulateKeyPress(Mappable.id.Character.feMouseLeft, 0.02);
+}

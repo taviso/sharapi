@@ -6,10 +6,10 @@ export class Base {
     private vftable: NativePointer;
 
     constructor(p: NativePointer) {
+        console.log(this.constructor['name'], "@", p.toString());
+
         if (!p || p == NULL || p.toInt32() == 0)
             throw "Constructing class with NULL pointer";
-
-        console.log(this.constructor['name'], "@", p.toString());
 
         this.ptr = p;
         this.vftable = p.readPointer();

@@ -1,8 +1,11 @@
 import "./frida"
-import { Symbols } from "./Symbols";
+import { Symbols } from "./Symbols"
+import { Cache } from "./uidcache.js"
 
-let NameCache = new Map();
+let NameCache = <Map<string, string>>new Map(<any>Cache);
 let FenceDSGCount = 0;
+
+console.log("NameCache initialized", NameCache.size, "entries");
 
 Interceptor.attach(Symbols.addr("tName::MakeUID"), {
     onEnter: function (args: Array<NativePointer>): void {
@@ -43,7 +46,7 @@ Interceptor.attach(Symbols.addr("tName::MakeUID"), {
 
 export class Names {
     static lookupUid(hash: UInt64): string {
-        // TODO: if undefined, scan through FenceDSG names.
+        // TODO: if undefined, scan through FenceDSG names?
         return NameCache.get(hash.toString());
     }
 }

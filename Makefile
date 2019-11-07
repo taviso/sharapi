@@ -1,4 +1,4 @@
-TSFLAGS=--target ES5 --module es6 --lib es6,dom --noEmitOnError --alwaysStrict
+TSFLAGS=--target ES5 --module es6 --lib es6,dom
 RUFLAGS=--format system --context global
 
 .PHONY: clean
@@ -32,7 +32,7 @@ src/frida.js: src/frida.d.ts
 	touch $@
 
 # tsc is sloooooooow to startup, try to bundle prereqs into one command.
-sharapi.js: src/import.js src/frida.js $(TSFILES)
+sharapi.js: src/import.js src/frida.js src/uidcache.js $(TSFILES)
 	tsc $(TSFLAGS) $(filter %.ts,$^)
 	rollup $(RUFLAGS) $< --file $@
 
