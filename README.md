@@ -9,9 +9,10 @@ and exposes JavaScript classes that can be used to query and control the game.
 The intention is to allow easy scriptable access to state, in a similar way to
 how [pysc2](https://github.com/deepmind/pysc2) enabled deepmind to learn how to
 play Starcraft II. Eventually I'd like to be able to automate finding glitches,
-crashes, strategies, routes and so on for speedrunning.
+crashes, strategies, routes and so on for
+[speedrunning](https://en.wikipedia.org/wiki/Speedrun).
 
-> *This is a solo hobby project, and I'm a long way off from that point.*
+> *This is a solo hobby project, I'm a long way off from that point.*
 
 Want to see it in action? Here is an early demo video using the debugging
 console.
@@ -28,7 +29,7 @@ and tries to break them!
     step();
 
     // Did we find the object?
-    if (prevDist <= 1) {
+    if (myPos.distanceTo(object) <= 1) {
         console.log(`object discovered at ${myPos}`);
 
         // Try to break it lol
@@ -40,6 +41,8 @@ and tries to break them!
 
 If you let this script run long enough (e.g. overnight), it will literally try
 to kick every object on the map!
+
+Like this idea and want to help? Let me know!
 
 # Installation
 
