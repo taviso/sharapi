@@ -4,6 +4,12 @@ import { Base } from "./Base"
 import { Vector } from "./Radmath"
 import { RoadSegment } from "./RoadSegment"
 import { InstDynaPhysDSG } from "./InstDynaPhysDSG"
+import { SimpleLock } from "./Locks"
+
+
+export var FindFenceElemsLock = new SimpleLock("IntersectManager::FindFenceElems");
+export var WorldRenderLayerLock = new SimpleLock("WorldRenderLayer::Render");
+export var WorldPhysicsLock = new SimpleLock("WorldPhysicsManager::Update");
 
 export class ReserveArray<T extends Base> extends Base {
     private type: {new(p: NativePointer): T;};
@@ -115,10 +121,19 @@ export class IntersectManager extends Base {
     FindDynaPhysElems(position: Vector, maxDistance: number): ReserveArray<InstDynaPhysDSG> {
         let _FindDynaPhysElems = Symbols.find("IntersectManager::FindDynaPhysElems");
         let nodes = new ReserveArray<InstDynaPhysDSG>(InstDynaPhysDSG);
+
+        // Take the lock, this is not reentrant.
+        WorldRenderLayerLock.enter();
+        WorldPhysicsLock.enter();
+
         _FindDynaPhysElems(this.ptr,
                            position.toPointer(),
                            maxDistance,
                            nodes.toPointer());
+
+
+        WorldRenderLayerLock.leave();
+        WorldPhysicsLock.leave();
         return nodes;
     }
 

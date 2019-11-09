@@ -55,7 +55,8 @@ declare namespace Module {
     function enumerateRanges(name, protection, callbacks: { onMatch: (range) => string, onComplete: () => void });
     function enumerateRangesSync(name, protection);
     function findBaseAddress(name);
-    function findExportByName(module, exp);
+    function findExportByName(module: string | null, exp: string): NativePointer | null;
+    function getExportByName(module: string | null, exp: string): NativePointer;
 }
 
 declare namespace Memory {
@@ -180,7 +181,7 @@ declare class NativePointer {
     // writeByteArray(address, bytes: ArrayBuffer | Array<any>);
     readCString(size?: number): string;
     readUtf8String(size?: number) : string;
-    // readUtf16String(address, length?);
+    readUtf16String(length?: number): string;
     // readAnsiString(address, size?);
     // writeUtf8String(address, str);
     // writeUtf16String(address, str);

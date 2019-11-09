@@ -11,7 +11,7 @@ TSFILES=src/Base.ts src/FeApp.ts src/FeText.ts src/usercall.ts  \
     src/CommandLineOptions.ts src/Character.ts                  \
     src/RenderManager.ts src/InputManager.ts src/Symbols.ts     \
     src/InstDynaPhysDSG.ts src/Sim.ts src/Debug.ts src/Names.ts \
-    src/Avatar.ts src/Events.ts
+    src/Avatar.ts src/Events.ts src/Locks.ts
 
 all: scriptfile.out.js
 

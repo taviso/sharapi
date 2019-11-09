@@ -67,11 +67,57 @@ export class AvatarManager extends Base {
         );
         return new Avatar(p);
     }
+
+    /**
+     * static utility function to easily grab default avatar.
+     * @param block Wait if an Avatar is not available.
+     */
+    static getAvatar(block = false): Avatar {
+        let p: NativePointer;
+        
+        while (true) {
+            p = Symbols.call<NativePointer>(
+                "AvatarManager::GetAvatarForPlayer",
+                AvatarManager.GetInstance(),
+                0
+            );
+            if (p.toInt32() == 0) {
+                if (block) {
+                    Thread.sleep(1);
+                    continue;
+                }
+                
+                return null;
+            }
+            break;
+        }
+
+        return new Avatar(p);
+    }
 }
 
 export class Avatar extends Base {
+    private manager: AvatarManager;
+
     constructor(p) {
         super(p);
+        // Keep a handy reference to the manager.
+        this.manager = new AvatarManager(); 
+    }
+
+    /**
+     * utility function to exit current vehicle.
+     */
+    putOnGround(): boolean {
+        let character = this.GetCharacter();
+
+        if (this.IsInCar()) {
+            this.manager.PutCharacterOnGround(
+                this.GetCharacter(),
+                this.GetVehicle()
+            );
+        }
+        return this.IsInCar();
     }
 
     HandleEvent(event: number, param: number | NativePointer): number {

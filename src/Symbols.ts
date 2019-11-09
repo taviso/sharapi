@@ -405,7 +405,77 @@ export class Symbols {
             returnType: 'void',
             argTypes:   ['pointer', 'pointer', 'pointer'],
             abi:        'stdcall',
-        }
+        },
+        "FeParent::RemoveChild": {
+            address:    ptr(0x544B60),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'thiscall',
+        },
+        "FeParent::ReplaceChild": {
+            address:    ptr(0x544B80),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'pointer'],
+            abi:        'thiscall',
+        },
+        "WorldScene::Render": {
+            address:    userpurge(["ebx"], 2, 0x49cc40),
+            returnType: 'void',
+            argTypes:   ['pointer', 'int'],
+            abi:        'stdcall',
+            realAddr:   ptr(0x49cc40),
+        },
+        "WorldScene::RenderScene": {
+            address:    ptr(0x49C0F0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'int', 'pointer'],
+            abi:        'stdcall',
+        },
+        "KERNEL32!EnterCriticalSection": {
+            address:    Module.getExportByName("KERNEL32", "EnterCriticalSection"),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "KERNEL32!LeaveCriticalSection": {
+            address:    Module.getExportByName("KERNEL32", "LeaveCriticalSection"),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "KERNEL32!DeleteCriticalSection": {
+            address:    Module.getExportByName("KERNEL32", "LeaveCriticalSection"),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "KERNEL32!InitializeCriticalSection": {
+            address:    Module.getExportByName("KERNEL32", "InitializeCriticalSection"),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "IntersectManager::FindFenceElems": {
+            address:    userpurge(["ecx", "edi"], 4, 0x4B49C0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'int', 'pointer'],
+            abi:        'stdcall',
+            realAddr:   ptr(0x4B49C0),
+        },
+        "WorldRenderLayer::Render": {
+            address:    userpurge(["ecx", "ebx", "edi", "esi"], 4, 0x4AAC00),
+            returnType: 'void',
+            argTypes:   ['int', 'int', 'int', 'int'],
+            abi:        'stdcall',
+            realAddr:   ptr(0x4aac00),
+        },
+        "WorldPhysicsManager::Update": {
+            address:    userpurge(["eax"], 2, 0x004DD410),
+            returnType: 'void',
+            argTypes:   ['pointer', 'int'],
+            abi:        'stdcall',
+            readlAddr:  ptr(0x4dd410),
+        },
     };
     static find(name: string): NativeFunction {
         if (!Symbols.map[name])
@@ -422,7 +492,7 @@ export class Symbols {
         );
     }
     static addr(name: string): NativePointer {
-        return Symbols.map[name].address;
+        return Symbols.map[name]?.realAddr ?? Symbols.map[name].address;
     }
 
     /**
@@ -432,13 +502,6 @@ export class Symbols {
      */
     static call<T>(name: string, ...args: Array<NativePointer | number | boolean>): T {
         let func = Symbols.find(name);
-
-        // There seems to be a bug with .apply on zero-arg NativeFunction objects.
-        // https://github.com/frida/frida/issues/1074
-        if (args.length == 0) {
-            return <T>func();
-        }
-
         return <T>func.apply(func, args);
     }
 }

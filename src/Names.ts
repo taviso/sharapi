@@ -46,7 +46,6 @@ Interceptor.attach(Symbols.addr("tName::MakeUID"), {
 
 export class Names {
     static lookupUid(hash: UInt64): string {
-        // TODO: if undefined, scan through FenceDSG names?
-        return NameCache.get(hash.toString());
+        return NameCache.get(hash.toString()) ?? hash.toString();
     }
 }

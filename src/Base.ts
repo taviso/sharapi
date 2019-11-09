@@ -6,13 +6,17 @@ export class Base {
     private vftable: NativePointer;
 
     constructor(p: NativePointer) {
-        console.log(this.constructor['name'], "@", p.toString());
+        //console.log(this.constructor['name'], "@", p.toString());
 
         if (!p || p == NULL || p.toInt32() == 0)
-            throw "Constructing class with NULL pointer";
+            throw `Constructing ${this.constructor['name']} with NULL pointer`;
 
         this.ptr = p;
         this.vftable = p.readPointer();
+    }
+
+    public toString(): string {
+        return `${this.constructor['name']}@${this.ptr}`;
     }
 
     /**
@@ -46,8 +50,8 @@ export class Base {
      * DO NOT INCLUDE this in argTypes, it is added automatically.
      *
      * @param index vtable entry index
-     * @param returnType frida Nativefunction return type
-     * @param argTypes frida Parameters, do not include the this parameter.
+     * @param returnType frida Nativefunction return type, default = void
+     * @param argTypes frida Parameters, do not include the 'this' parameter.
      * @param args Arguments
      */
     protected callVirtual<T>(index: number,

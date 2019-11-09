@@ -28,20 +28,9 @@ export class tName extends Base {
 //  14 -> ScroobyText
 
 /*
-var f = new FeText("ActionTextLabel2", 0x72, 0x140);
-f.getFeParent().Resize(0x40);
+var f = new FeText("Message", 150, 350);
 f.AddHardCodedString("Hello!");
-f.toScroobyBoundedDrawable().SetBoundingBoxSize(0x1A4, 0x10);
-f.toScroobyBoundedDrawable().SetVerticalJustification(2);
-f.toScroobyBoundedDrawable().SetHorizontalJustification(4);
-f.toScroobyDrawable().SetColour(0xFFFFFFFF);
 f.SetTextStyle("font0_16");
-f.toScroobyText().SetDisplayShadow(0x1);
-f.toScroobyText().SetShadowColour(0xC00000);
-f.toScroobyText().SetShadowOffset(2, -2);
-f.toScroobyText().SetIndex(0);
-
-
 var app = new FeApp();
 var layer = app.GetProject().GetCurrentScreen().GetPageByIndex(0).GetLayerByIndex(0);
 var parent = layer.getFeParent();
@@ -67,6 +56,8 @@ class FeTextScroobyDrawable extends Base {
 
 export class FeText extends Base {
     private name: tName;
+    private strings: Array<NativePointer>;
+
     static Scrooby = {
         Drawable: FeTextScroobyDrawable,
     };
@@ -82,11 +73,16 @@ export class FeText extends Base {
 
         this.name = n;
         this.vbtable = this.ptr.add(0x10);
+        this.strings = new Array();
     }
 
     AddHardCodedString(str: string): void {
-        let _AddHardCodedString = Symbols.find("FeText::AddHardCodedString");
-        _AddHardCodedString(this.ptr, Memory.allocAnsiString(str));
+        let newString = Memory.allocUtf8String(str);
+        Symbols.call<void>("FeText::AddHardCodedString", this.ptr, newString);
+
+        // Keep a reference to avoid gc.
+        this.strings.push(newString);
+
         return;
     }
 
@@ -121,6 +117,18 @@ class FeTextFeParent extends Base {
         let _Resize = Symbols.find("FeParent::Resize");
         return _Resize(this.ptr, size);
     }
+
+    RemoveChild(child: FeText): void {
+        Symbols.call<void>("FeParent::RemoveChild", this.ptr, child.toPointer());
+    }
+
+    ReplaceChild(oldChild: FeText, newChild: FeText): void {
+        Symbols.call<void>("FeParent::ReplaceChild",
+            this.ptr,
+            oldChild.toPointer(),
+            newChild.toPointer()
+        );
+    }
 }
 
 class FeTextScroobyBoundedDrawable extends Base {
@@ -152,9 +160,36 @@ class FeTextScroobyText extends Base {
         super(p);
     }
 
+    RestoreDefaultColour() : void {
+        this.callVirtual<void>(0);
+    }
+
+    GetIndex(): number {
+        return this.callVirtual<number>(1);
+    }
+
     SetIndex(index: number): void {
-        let _SetIndex = this.getVirtual(2, 'void', ['pointer', 'int']);
-        _SetIndex(this.ptr, index);
+        this.callVirtual<void>(2, 'void', ["int"], index);
+    }
+
+    GetNumOfStrings(): number {
+        return this.callVirtual<number>(3, 'int');
+    }
+
+    GetStringNum(num: number): string {
+        let wptr = Memory.alloc(4).writeU32(num);
+        this.callVirtual<void>(4, 'pointer', ["pointer"], wptr);
+        return wptr.readPointer().readUtf16String();
+    }
+
+    GetString(): string {
+        let wptr = Memory.alloc(4);
+        this.callVirtual<void>(5, 'pointer', ["pointer"], wptr);
+        return wptr.readPointer().readUtf16String();
+    }
+
+    GetStringBuffer(): NativePointer {
+        return this.callVirtual<NativePointer>(7, 'pointer');
     }
 
     SetDisplayShadow(status: boolean): void {
@@ -163,8 +198,7 @@ class FeTextScroobyText extends Base {
     }
 
     IsDisplayingShadow(): boolean {
-        let _IsDisplayingShadow = this.getVirtual(17, 'bool', ['pointer']);
-        return _IsDisplayingShadow(this.ptr);
+        return this.callVirtual<boolean>(17, 'bool');
     }
 
     SetShadowOffset(x: number, y: number): void {

@@ -47,7 +47,7 @@ export class Sphere extends Base {
         }
         super(Memory.alloc(4 * 3 + 4));
         
-        this.spherePosition = new Vector(position.toPointer());
+        this.spherePosition = new Vector(position?.toPointer());
         this.radius = radius;
     }
 
@@ -105,8 +105,29 @@ export class Vector extends Base {
     set z(value: number) {
         this.ptr.add(2 * 4).writeFloat(value);
     }
+
+    /**
+     * Find the euclidean distance between two points.
+     * @param v Point to compare.
+     * @param overGround Ignore height, for example when walking towards an aircraft position.
+     */
+    distanceTo(v: Vector, overGround = false): number {
+        let dx = this.x - v.x;
+        let dy = this.y - v.y;
+        let dz = this.z - v.z;
+
+        if (overGround)
+            dy = 0;
+
+        return Math.sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
     toArray(): Array<number> {
         return [ this.x, this.y, this.z ];
+    }
+
+    toString(): string {
+        return `(${Math.round(this.x)}, ${Math.round(this.y)}, ${Math.round(this.z)})`;
     }
 }
 
