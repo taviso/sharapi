@@ -7,6 +7,7 @@ var intersect = new IntersectManager();
 var blacklist = new Array();
 var input = InputManager.GetController().GetMappable(2);
 let myPos = new Vector(avatar.GetCharacter().rPosition);
+let found = 0, attempts = 0;
 
 console.log(`character is at ${myPos}`);
 
@@ -19,6 +20,8 @@ setTimeout(beginSearch, 0);
 function beginSearch() {
     var object = pickTarget();
 
+    console.log(`begin search ${++attempts}, successful ${found} times.`)
+
     // Make sure it doesn't get freed.
     object.AddRef();
 
@@ -26,7 +29,9 @@ function beginSearch() {
     avatar.putOnGround();
 
     // Start looking for the object.
-    approachObject(object);
+    if (approachObject(object)) {
+        found++;
+    }
 
     // Make sure we don't pick it again.
     blacklist.push(object.getName());
@@ -50,6 +55,11 @@ function pickTarget(radius = 10) {
 
     // Filter blacklisted objects.
     elements = elements.filter((a) => !blacklist.includes(a.getName()));
+
+    // Make sure we don't recurse too far by pruning blacklist.
+    if (radius > 100)  {
+        blacklist.shift();
+    }
 
     // Increase radius if no match.
     if (elements.length == 0) {
@@ -78,7 +88,7 @@ function approachObject(object)
     // Find size of the obect, as it's position is the centre point.
     let objectSize = object.GetBoundingSphere().radius;
 
-    // Find the objects name for loging.
+    // Find the objects name for logging.
     let name = object.getName();
 
     console.log(`Approaching object ${name}, radius=${objectSize}`);
@@ -111,7 +121,7 @@ function approachObject(object)
     // Can't reach it :( Maybe this is a really big object and
     // we can't reach the center?
     if (myPos.distanceTo(objectPos, true) <= objectSize) {
-        console.log(`This is as close we can get to large object`)
+        console.log(`This is as close as I can get to large object`)
         return foundObject(object);
     }
 
@@ -136,21 +146,16 @@ function slam() {
 }
 
 function jump() {
-    toggleWalk();
+    input.ToggleKeyDown(Mappable.id.Character.MoveUp);
     input.SimulateKeyPress(Mappable.id.Character.Jump);
     while (input.IsButtonDown(Mappable.id.Character.MoveUp))
-        toggleWalk();
+        input.ToggleKeyDown(Mappable.id.Character.MoveUp);
 }
 
-// one step moves us about 1 unit.
 function step() {
     input.SimulateKeyPress(Mappable.id.Character.MoveUp);
 }
 
 function rotate() {
     input.SimulateKeyPress(Mappable.id.Character.feMouseLeft, 0.02);
-}
-
-function toggleWalk() {
-    input.ToggleKeyDown(Mappable.id.Character.MoveUp);
 }

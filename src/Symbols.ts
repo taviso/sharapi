@@ -474,8 +474,15 @@ export class Symbols {
             returnType: 'void',
             argTypes:   ['pointer', 'int'],
             abi:        'stdcall',
-            readlAddr:  ptr(0x4dd410),
+            realAddr:  ptr(0x4dd410),
         },
+        "Context::Update": {
+            address:    userpurge(["edi", "esi"], 2, 0x42FB20),
+            returnType: 'void',
+            argTypes:   ["pointer", "pointer"],
+            abi:        'stdcall',
+            realAddr:   ptr(0x42FB20),
+        }
     };
     static find(name: string): NativeFunction {
         if (!Symbols.map[name])

@@ -41,3 +41,7 @@ export class SimpleLock extends Lock {
         });
     }
 }
+
+export var WorldRenderLayerLock = new SimpleLock("WorldRenderLayer::Render");
+export var WorldPhysicsLock = new SimpleLock("WorldPhysicsManager::Update");
+export var ContextUpdateLock = new SimpleLock("Context::Update");
