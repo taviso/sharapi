@@ -2,7 +2,7 @@
 
 > ***This code is in a pre-pre-pre-alpha experimental state.***
 
-This is a library to facilitate automating the abandonware game Simpsons: Hit &
+This is a library to automate the abandonware game Simpsons: Hit &
 Run with JavaScript. It uses [frida](https://frida.re) to access internal state,
 and exposes JavaScript classes that can be used to query and control the game.
 
