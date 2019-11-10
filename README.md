@@ -17,7 +17,7 @@ crashes, strategies, routes and so on for
 Want to see it in action? Here is an early demo video using the debugging
 console.
 
-[![Video](doc/video.png)](https://www.youtube.com/watch?v=cpmvSQ2l3Nc)
+[![Video](doc/video.png)](https://youtu.be/PHa1F3tT130)
 
 Want to see an example script? Here is a simple script that just finds objects
 and tries to break them!
