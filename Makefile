@@ -15,6 +15,8 @@ TSFILES=src/Base.ts src/FeApp.ts src/FeText.ts src/usercall.ts  \
 
 all: scriptfile.out.js
 
+release: sharapi.zip
+
 
 %.js: %.ts
 	tsc $(TSFLAGS) $<
@@ -22,6 +24,7 @@ all: scriptfile.out.js
 clean:
 	rm -f *.out.js exports.js sharapi.js src/frida.js src/import.js
 	rm -f $(TSFILES:.ts=.js)
+	rm -f sharapi.zip
 
 exports.js: TSFLAGS+=--module commonjs
 
@@ -38,3 +41,6 @@ sharapi.js: src/import.js src/frida.js src/uidcache.js $(TSFILES)
 
 scriptfile.out.js: src/System.js sharapi.js src/main.js
 	cat $^ > $@
+
+sharapi.zip: README.md DEVEL.md examples doc scriptfile.out.js inject.py
+	(cd .. && zip -r sharapi/$@ $(patsubst %,sharapi/%,$^))
