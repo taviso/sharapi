@@ -42,6 +42,8 @@ and tries to break them!
 If you let this script run long enough (e.g. overnight), it will literally try
 to kick every object on the map!
 
+> Update: [here](https://youtu.be/buetZ-5ceno) is another video.
+
 Like this idea and want to help? Let me know!
 
 # Installation
