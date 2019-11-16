@@ -2,6 +2,7 @@ import { Base } from "./Base"
 import { Vector, Box3D, Sphere } from "./Radmath"
 import { SimState } from "./Sim"
 import { Names } from "./Names"
+import { Symbols } from "./Symbols";
 
 /**
  * A Dynamic Physics Object.
@@ -173,6 +174,10 @@ export class InstDynaPhysDSG extends Base {
 
     Break(): boolean {
         return this.callVirtual<boolean>(37, 'bool');
+    }
+
+    IsCollisionEnabled(): boolean {
+        return !! Symbols.call<number>("DynaPhysDSG::IsCollisionEnabled", this.ptr);
     }
 }
 

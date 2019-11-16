@@ -35,11 +35,11 @@ export class ReserveArray<T extends Base> extends Base {
         return this.ptr.add(4).readU32();
     }
 
-    private getIndex(index: number): T {
+    getIndex(index: number): T {
         return new this.type(this.ptr.add(8).readPointer().add(index * 4).readPointer());
     }
 
-    private toArray(): Array<T> {
+    toArray(): Array<T> {
         let all: Array<T> = [];
         for (let i: number = 0; i < this.currentOccupancy; i++)
             all.push(this.getIndex(i));
@@ -114,22 +114,19 @@ export class IntersectManager extends Base {
     }
 
     FindDynaPhysElems(position: Vector, maxDistance: number): ReserveArray<InstDynaPhysDSG> {
-        let _FindDynaPhysElems = Symbols.find("IntersectManager::FindDynaPhysElems");
         let nodes = new ReserveArray<InstDynaPhysDSG>(InstDynaPhysDSG);
 
         // Take the lock, this is not reentrant.
         WorldRenderLayerLock.enter();
-        //WorldPhysicsLock.enter();
         ContextUpdateLock.enter();
 
-        _FindDynaPhysElems(this.ptr,
+        Symbols.call<void>("IntersectManager::FindDynaPhysElems",
+                           this.ptr,
                            position.toPointer(),
                            maxDistance,
                            nodes.toPointer());
 
-
         ContextUpdateLock.leave();
-        //WorldPhysicsLock.leave();
         WorldRenderLayerLock.leave();
         return nodes;
     }
@@ -143,5 +140,89 @@ export class IntersectManager extends Base {
                            maxDistance,
                            nodes.toPointer());
         return nodes;
+    }
+}
+
+// This class manages memory for you. This is inefficient, but
+// otherwise you have to remember to free stuff.
+export class IntersectionList extends Base {
+    constructor() {
+        let p: NativePointer = Memory.alloc(0x48);
+        Symbols.call<NativePointer>("IntersectionList", p);
+        super(p);
+    }
+
+    protected init(): void {
+        Symbols.call<NativePointer>("IntersectionList", this.ptr);
+    }
+
+    protected fini(): void {
+        Symbols.call<void>("~IntersectionList", this.ptr);
+    }
+
+    protected FillIntersectionListDynamics(position: Vector, object: InstDynaPhysDSG, radius: number): number {
+        let result: number;
+
+        // Take the lock, this is not reentrant.
+        WorldRenderLayerLock.enter();
+        ContextUpdateLock.enter();
+
+        result = Symbols.call<number>("IntersectionList::FillIntersectionListDynamics",
+            this.ptr,
+            position.toPointer(),
+            radius,
+            1,
+            object.toPointer()
+        );
+
+        WorldRenderLayerLock.leave();
+        ContextUpdateLock.leave();
+        return result;
+    }
+
+    protected TestIntersectionDynamics(startPos: Vector, endPos: Vector): InstDynaPhysDSG | null {
+        let hitObject = Memory.alloc(0x4);
+        let hitVector = new Vector();
+
+        // Take the lock, this is not reentrant.
+        WorldRenderLayerLock.enter();
+        ContextUpdateLock.enter();
+
+        if (Symbols.call<number>("IntersectionList::TestIntersectionDynamics",
+                startPos.toPointer(),
+                endPos.toPointer(),
+                this.ptr,
+                hitVector.toPointer(),
+                hitObject)) {
+            //console.log(`TestIntersectionDynamics: intersection ${hitVector.toString()}`);
+
+            WorldRenderLayerLock.leave();
+            ContextUpdateLock.leave();
+            return new InstDynaPhysDSG(hitObject.readPointer());
+        }
+
+        WorldRenderLayerLock.leave();
+        ContextUpdateLock.leave();
+        // No intersections?
+        return null;
+    }
+
+    intersectScan(self: InstDynaPhysDSG, endPos: Vector): InstDynaPhysDSG | null {
+        let hitObject: InstDynaPhysDSG | null = null;
+        let count = this.FillIntersectionListDynamics(
+            self.GetPosition(),
+            self,
+            endPos.distanceTo(self.GetPosition()));
+
+        if (count) {
+            hitObject = this.TestIntersectionDynamics(self.GetPosition(), endPos);
+        }
+
+        // Release resources
+        this.fini();
+        // Reinitialize.
+        this.init();
+
+        return hitObject
     }
 }

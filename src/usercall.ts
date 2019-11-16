@@ -68,6 +68,10 @@ export function userpurge(convention: Array<string>,
     gen.flush();
 
     console.log("userpurge(), params=", params, "size=", gen.offset, "addr=", code.toString());
+
+    // Keep a copy of the real address.
+    code["origAddress"] = ptr(address);
+
     return code;
 }
 
@@ -114,5 +118,9 @@ export function usercall(convention: Array<string>,
     gen.flush();
 
     console.log("usercall(), params=", params, "size=", gen.offset, "addr=", code.toJSON());
+
+    // Keep a copy of the real address.
+    code["origAddress"] = ptr(address);
+
     return code;
 }

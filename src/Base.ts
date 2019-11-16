@@ -97,4 +97,12 @@ export class Base {
     protected Release(): number {
         return this.callVirtual<number>(1, 'uint32');
     }
+
+    /*
+    protected dynamicCast<T extends Base>(
+        inPtr: NativePointer,
+        ): T {
+
+    }
+    */
 }

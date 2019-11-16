@@ -423,7 +423,6 @@ export class Symbols {
             returnType: 'void',
             argTypes:   ['pointer', 'int'],
             abi:        'stdcall',
-            realAddr:   ptr(0x49cc40),
         },
         "WorldScene::RenderScene": {
             address:    ptr(0x49C0F0),
@@ -460,29 +459,145 @@ export class Symbols {
             returnType: 'void',
             argTypes:   ['pointer', 'pointer', 'int', 'pointer'],
             abi:        'stdcall',
-            realAddr:   ptr(0x4B49C0),
         },
         "WorldRenderLayer::Render": {
             address:    userpurge(["ecx", "ebx", "edi", "esi"], 4, 0x4AAC00),
             returnType: 'void',
             argTypes:   ['int', 'int', 'int', 'int'],
             abi:        'stdcall',
-            realAddr:   ptr(0x4aac00),
         },
         "WorldPhysicsManager::Update": {
             address:    userpurge(["eax"], 2, 0x004DD410),
             returnType: 'void',
             argTypes:   ['pointer', 'int'],
             abi:        'stdcall',
-            realAddr:  ptr(0x4dd410),
         },
         "Context::Update": {
             address:    userpurge(["edi", "esi"], 2, 0x42FB20),
             returnType: 'void',
             argTypes:   ["pointer", "pointer"],
             abi:        'stdcall',
-            realAddr:   ptr(0x42FB20),
-        }
+        },
+        "GameplayManager::GetInstance": {
+            address:   ptr(0x448080),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall',
+        },
+        "ActionButtonManager::GetInstance": {
+            address:    ptr(0x406140),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall',
+        },
+        "ActorManager::GetInstance": {
+            address:    ptr(0x416170),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall'
+        },
+        "Sparkle::GetInstance": {
+            address:    ptr(0x506A60),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall',
+        },
+        "Sparkle::AddSparks": {
+            address:    userpurge(["eax"], 4, 0x506fd0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer', 'pointer', 'float'],
+            abi:        'stdcall',
+        },
+        "Mission::GetCurrentStage": {
+            address:    ptr(0x44d3f0),
+            returnType: 'pointer',
+            argTypes:   ['pointer'],
+            abi:        'thiscall',
+        },
+        "MissionScriptLoader::GetInstance": {
+            address:    ptr(0x44eda0),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall',
+        },
+        "MissionObjective::GetObjectiveType": {
+            address:    userpurge(["eax"], 1, 0x40e8e0),
+            returnType: 'int',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "SuperCamManager::GetInstance": {
+            address:    ptr(0x42A270),
+            returnType: 'pointer',
+            argTypes:   [],
+            abi:        'stdcall',
+        },
+        "SuperCamCentral::GetSuperCam": {
+            address:    userpurge(["ebx"], 2, 0x429400),
+            returnType: 'pointer',
+            argTypes:   ['pointer', 'int'],
+            abi:        'stdcall',
+        },
+        "SuperCamManager::GetSCC": {
+            address:    userpurge(["ecx", "eax"], 2, 0x42a2d0),
+            returnType: 'pointer',
+            argTypes:   ['pointer', 'int'],
+            abi:        'stdcall',
+        },
+        "SuperCam::SetCameraValues": {
+            address:    ptr(0x427410),
+            returnType: 'void',
+            argTypes:   ['pointer', 'int', 'float', 'float', 'float', 'float', 'float', 'float', 'pointer'],
+            abi:        'stdcall',
+        },
+        "SuperCam::GetPosition": {
+            address:    userpurge(["ecx", "eax"], 2, 0x4271A0),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "SuperCam::GetTarget": {
+            address:    userpurge(["ecx", "eax"], 2, 0x427200),
+            returnType: 'void',
+            argTypes:   ['pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "IntersectionList": {
+            address:    ptr(0x41AF80),
+            returnType: 'pointer',
+            argTypes:   ['pointer'],
+            abi:        'stdcall',
+        },
+        "IntersectionList::FillIntersectionListDynamics": {
+            address:    ptr(0x41BF60),
+            returnType: 'int',
+            argTypes:   ['pointer', 'pointer', 'float', 'bool', 'pointer'],
+            abi:        'stdcall',
+        },
+        "~IntersectionList": {
+            address:    ptr(0x41B050),
+            returnType: 'void',
+            argTypes:   ['pointer'],
+            abi:        'thiscall',
+        },
+        "DynaPhysDSG::IsCollisionEnabled": {
+            address:    ptr(0x49FC60),
+            returnType: 'bool',
+            argTypes:   ['pointer'],
+            abi:        'thiscall',
+        },
+        "IntersectionList::TestIntersectionDynamics": {
+            address:    userpurge(["eax", "edi"], 5, 0x41B490),
+            returnType: 'bool',
+            argTypes:   ['pointer', 'pointer', 'pointer', 'pointer', 'pointer'],
+            abi:        'stdcall',
+        },
+        "__builtin_vec_new": {
+            address:    ptr(0x445600),
+            returnType: 'pointer',
+            argTypes:   ['int'],
+            abi:        'cdecl',
+        },
     };
     static find(name: string): NativeFunction {
         if (!Symbols.map[name])
@@ -498,8 +613,13 @@ export class Symbols {
             Symbols.map[name].abi
         );
     }
+
     static addr(name: string): NativePointer {
-        return Symbols.map[name]?.realAddr ?? Symbols.map[name].address;
+        // This check handles the case of the entry being a usercall/userpurge
+        // wrapper.
+        return "origAddress" in Symbols.map[name].address
+            ? Symbols.map[name].address.origAddress
+            : Symbols.map[name].address;
     }
 
     /**

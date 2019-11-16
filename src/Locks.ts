@@ -42,6 +42,7 @@ export class SimpleLock extends Lock {
     }
 }
 
+// These are not cheap, these three seem to be sufficient so far.
 export var WorldRenderLayerLock = new SimpleLock("WorldRenderLayer::Render");
 export var WorldPhysicsLock = new SimpleLock("WorldPhysicsManager::Update");
 export var ContextUpdateLock = new SimpleLock("Context::Update");

@@ -23,18 +23,18 @@ export class Character extends InstDynaPhysDSG {
     /**
      * 
      * @param pos New position for Character.
-     * @param facing Desired facing angle.
+     * @param heading Desired facing angle.
      * @param b Unknown
      * @param reset Reset action state?
      */
     RelocateAndReset(pos: Vector,
-                     rotation: number,
+                     heading: number,
                      b: boolean,
                      reset: boolean = false): void {
         Symbols.call<void>("Character::RelocateAndReset",
             this.ptr,
             pos.toPointer(),
-            rotation,
+            heading,
             +b,
             +reset
         );

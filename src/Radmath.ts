@@ -107,6 +107,17 @@ export class Vector extends Base {
     }
 
     /**
+     * Compare two vector values.
+     * @param v Vector to compare to.
+     * @param delta Small difference allowed, set to zero for strict equality.
+     */
+    equals(v: Vector, delta=0.01): boolean {
+        return (Math.abs(this.x - v.x) < delta)
+            && (Math.abs(this.y - v.y) < delta)
+            && (Math.abs(this.z - v.z) < delta);
+    }
+
+    /**
      * Find the euclidean distance between two points.
      * @param v Point to compare.
      * @param overGround Ignore height, for example when walking towards an aircraft position.

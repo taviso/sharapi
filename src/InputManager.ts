@@ -184,9 +184,15 @@ export class Mappable extends Base {
         if (code < 0)
             return false;
 
-        this.DispatchOnButton(code, 1.0);
+        while (!this.IsButtonDown(key)) {
+            this.DispatchOnButton(code, 1.0);
+        }
+
         Thread.sleep(duration);
-        this.DispatchOnButton(code, 0.0);
+
+        while (this.IsButtonDown(key)) {
+            this.DispatchOnButton(code, 0.0);
+        }
 
         return true;
     }
