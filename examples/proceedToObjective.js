@@ -14,6 +14,7 @@ console.log(`target is at ${objective.getPosition().toString()}`);
 
 function BeginPathFinding() {
     Navigate.pathFind(myPos, objective.getPosition()).then(function (path) {
+        let minDistance = 0.1;
         // Enable sprinting.
         input.UpdateButtonState(Mappable.id.Character.Sprint, 1.0);
 
@@ -34,11 +35,11 @@ function BeginPathFinding() {
         input.UpdateButtonState(Mappable.id.Character.Sprint, 0);
 
         // Step towards final destination.
-        StepTowardsPosition(objective.GetPosition(), 0.5);
+        StepTowardsPosition(objective.getPosition(), 0.5);
     });
 }
 
-//setTimeout(BeginPathFinding, 0);
+setTimeout(BeginPathFinding, 0);
 
 function avoidObstacle() {
     // Try avoiding obstacle.
@@ -46,9 +47,9 @@ function avoidObstacle() {
     Jump();
 
     if (Math.random() < 0.5) {
-        MoveLeft(3);
+        Input.MoveLeft(3);
     } else {
-        MoveRight(3);
+        Input.MoveRight(3);
     }
 }
 
@@ -67,7 +68,7 @@ function StepTowardsPosition(target, maxDistance = 2.5, maxSteps = 10) {
         }
 
         // Step forward
-        MoveUp();
+        Input.MoveUp();
 
         // I dunno, maybe try to jump on ledges!
         if (target.y - myPos.y > 1) {
@@ -88,17 +89,6 @@ function StepTowardsPosition(target, maxDistance = 2.5, maxSteps = 10) {
     return true;
 }
 
-function MoveUp() {
-    input.SimulateKeyPress(Mappable.id.Character.MoveUp);
-}
-function MoveLeft(count=1) {
-    while (count--)
-        input.SimulateKeyPress(Mappable.id.Character.MoveLeft);
-}
-function MoveRight(count=1) {
-    while (count--)
-        input.SimulateKeyPress(Mappable.id.Character.MoveRight);
-}
 function Jump() {
     input.UpdateButtonState(Mappable.id.Character.MoveUp, 1.0);
     input.SimulateKeyPress(Mappable.id.Character.Jump);

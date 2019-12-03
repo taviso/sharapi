@@ -46,6 +46,7 @@ Interceptor.attach(Symbols.addr("tName::MakeUID"), {
 
 export class Names {
     static lookupUid(hash: UInt64): string {
-        return NameCache.get(hash.toString()) ?? hash.toString();
+        let result = NameCache.get(hash.toString());
+        return result ? result : hash.toString();
     }
 }

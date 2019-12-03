@@ -1,1 +1,1 @@
-console.log("sharapi initialized.")
+console.log("sharapi initialized.");

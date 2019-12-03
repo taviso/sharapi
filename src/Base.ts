@@ -3,7 +3,7 @@ import "./frida"
 export class Base {
     protected ptr: NativePointer;
     protected vbtable: NativePointer;
-    private vftable: NativePointer;
+    protected vftable: NativePointer;
 
     constructor(p: NativePointer) {
         //console.log(this.constructor['name'], "@", p.toString());

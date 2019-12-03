@@ -175,8 +175,8 @@ export class IntersectionList extends Base {
             object.toPointer()
         );
 
-        WorldRenderLayerLock.leave();
         ContextUpdateLock.leave();
+        WorldRenderLayerLock.leave();
         return result;
     }
 
@@ -196,13 +196,13 @@ export class IntersectionList extends Base {
                 hitObject)) {
             //console.log(`TestIntersectionDynamics: intersection ${hitVector.toString()}`);
 
-            WorldRenderLayerLock.leave();
             ContextUpdateLock.leave();
+            WorldRenderLayerLock.leave();
             return new InstDynaPhysDSG(hitObject.readPointer());
         }
 
-        WorldRenderLayerLock.leave();
         ContextUpdateLock.leave();
+        WorldRenderLayerLock.leave();
         // No intersections?
         return null;
     }

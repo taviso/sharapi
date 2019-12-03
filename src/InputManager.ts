@@ -230,13 +230,16 @@ export class InputManager extends Base {
     }
 
     static GetInstance(): NativePointer {
-        let _GetInstance = Symbols.find("InputManager::GetInstance");
-        return _GetInstance();
+        return Symbols.call<NativePointer>("InputManager::GetInstance");
     }
 
     static GetController(num = 0): UserController {
-        let _GetController = Symbols.find("InputManager::GetController");
-        return new UserController(_GetController(this.GetInstance(), num));
+        let Controller = Symbols.call<NativePointer>(
+            "InputManager::GetController",
+            this.GetInstance(),
+            num
+        );
+        return new UserController(Controller);
     }
 
     // FIXME: I don't know what this thing is.
@@ -245,13 +248,58 @@ export class InputManager extends Base {
     }
 }
 
+
+export class Input {
+    static MoveUp(count = 1) {
+        while (count--)
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.MoveUp);
+    }
+    static MoveDown(count = 1) {
+        while (count--)
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.MoveDown);
+    }
+    static MoveLeft(count = 1) {
+        while (count--)
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.MoveLeft);
+    }
+    static MoveRight(count = 1) {
+        while (count--)
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.MoveRight);
+    }
+    static Jump() {
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.Jump);
+    }
+    static Attack() {
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.Attack);
+    }
+    static Action() {
+        InputManager
+            .GetController()
+            .GetMappable(2)
+            .SimulateKeyPress(Mappable.id.Character.DoAction);
+    }
+}
+
 // var m = InputManager.GetController().GetMappable(2);
 // // Start moving
 // m.UpdateButtonState(Mappable.id.Character.MoveUp, 1.0);
 // // Start sprinting
 // m.UpdateButtonState(Mappable.id.Character.Sprint, 1.0);
-
-// // Jump in the air
-
-
-

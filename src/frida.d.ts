@@ -69,6 +69,7 @@ declare namespace Memory {
     function allocUtf8String(str): NativePointer;
     function allocUtf16String(str): NativePointer;
     function allocAnsiString(str): NativePointer;
+    function patchCode(address, size, apply): void;
 }
 
 declare namespace MemoryAccessMonitor {
@@ -119,9 +120,11 @@ declare class X86Writer {
     constructor(codeAddress: NativePointer, options?: object);
     flush();
     putRet();
+    putRetImm(immValue: number);
     putPopReg(reg: string);
     putMovRegReg(dstReg: string, srcReg: string);
     putAddRegImm(dstReg: string, immValue: number);
+    putSubRegImm(dstReg: string, immValue: number);
     putCallAddress(address: NativePointer);
     putU8(value: number);
     putBytes(data: ArrayBuffer);
@@ -250,7 +253,7 @@ declare interface InvocationListener {
 }
 
 declare namespace Interceptor {
-    function attach(target: NativePointer, callbacks: { onEnter: (args) => void, onLeave: (retval: NativePointer) => void }): InvocationListener;
+    function attach(target: NativePointer, callbacks: { onEnter: (args) => void, onLeave?: (retval: NativePointer) => void }): InvocationListener;
     function detachAll();
     function replace(target: NativePointer, replacement: NativeCallback);
     function revert(target: NativePointer);
