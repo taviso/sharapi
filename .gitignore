@@ -8,3 +8,4 @@ src/*.js
 src/.*.sw?
 !src/System.js
 !src/main.js
+!src/uidcache.js
