@@ -74,6 +74,8 @@ prebuilt version. `tsc` is the typescript compiler, `rollup` takes all of the
 individual files, figures out the module dependencies and produces a single
 file to give to frida.
 
+> Note: This project uses submodules, remember to type `git submodule update --init --recursive`
+
 I use `WSL`, and just type `make` to build the final output files with GNU make,
 because I'm more familiar with Makefiles. In future I'll figure out how to use
 `tsconfig.json`.

@@ -53,7 +53,7 @@ recast.lib: SDL2-devel-$(SDLVER)-VC.zip
 	$(CMAKE) $(CMFLAGS) -DSDL2_ROOT_DIR=../../SDL2-$(SDLVER) -S recastnavigation -B build-$@
 	$(MSBUILD) $(MFLAGS) build-$@/RecastNavigation.sln
 
-navmesh.exe:
+navmesh.exe: | recast.lib
 	make -C src/pathfinding $@
 	cp src/pathfinding/$@ $@
 
