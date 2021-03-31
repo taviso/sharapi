@@ -11,7 +11,7 @@
     },
     "references": [
         {
-            "path": "build/"
+            "path": "build"
         }
     ],
     "files": [

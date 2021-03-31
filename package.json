@@ -9,12 +9,11 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "build:generate_exports": "tsc -p build/",
-    "build:generate_imports": "node dist/exports.js 'src/*.ts' > dist/import.js",
     "build:main_build": "tsc --build",
+    "build:generate_imports": "node dist/exports.js 'src/*.ts' > dist/import.js",
     "build:rollup": "rollup -c",
     "build:generate_scriptfile": "concat -o dist/scriptfile.out.js dist/System.js dist/sharapi.js dist/main.js",
-    "build": "npm run build:generate_exports && npm run build:generate_imports && npm run build:main_build && npm run build:rollup && npm run build:generate_scriptfile",
+    "build": "npm run build:main_build && npm run build:generate_imports && npm run build:rollup && npm run build:generate_scriptfile",
     "release": "",
     "clean": "tsc --build --clean && npx rimraf sharapi.zip scriptfile.out.js dist/"
   }
