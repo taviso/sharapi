@@ -1,0 +1,53 @@
+{
+    "compilerOptions": {
+        "module": "ES6",
+        "target": "ES5",
+        "lib": [
+            "ES6",
+            "DOM",
+        ],
+        "outDir": "dist/",
+        "allowJs": true,
+    },
+    "references": [
+        {
+            "path": "build/"
+        }
+    ],
+    "files": [
+        "src/Base.ts",
+        "src/FeApp.ts",
+        "src/FeText.ts",
+        "src/usercall.ts",
+        "src/CharacterSheetManager.ts",
+        "src/CharacterManager.ts",
+        "src/CoinManager.ts",
+        "src/Radmath.ts",
+        "src/Vehicle.ts",
+        "src/RoadSegment.ts",
+        "src/IntersectManager.ts",
+        "src/CommandLineOptions.ts",
+        "src/Character.ts",
+        "src/RenderManager.ts",
+        "src/InputManager.ts",
+        "src/Symbols.ts",
+        "src/InstDynaPhysDSG.ts",
+        "src/Sim.ts",
+        "src/Debug.ts",
+        "src/Names.ts",
+        "src/Avatar.ts",
+        "src/Events.ts",
+        "src/Locks.ts",
+        "src/GameplayManager.ts",
+        "src/ActionButtonManager.ts",
+        "src/ActorManager.ts",
+        "src/Sparkle.ts",
+        "src/Mission.ts",
+        "src/SuperCamCentral.ts",
+        "src/Util.ts",
+        "src/System.js",
+        "src/uidcache.js",
+        "src/main.js",
+        "src/frida.js",
+    ]
+}

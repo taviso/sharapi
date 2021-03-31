@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "composite": true, // Must be true in order for tsconfig project references to work.
+        "module": "commonjs",
+        "target": "ES5",
+        "lib": [
+            "ES6",
+            "DOM",
+        ],
+        "outDir": "../dist/"
+    },
+    "files": [
+        "exports.ts",
+    ]
+}

@@ -9,3 +9,10 @@ src/.*.sw?
 !src/System.js
 !src/main.js
 !src/uidcache.js
+!src/frida.js
+
+# Compiled Output
+dist/
+
+# TypeScript incremental compilation cache
+*.tsbuildinfo
