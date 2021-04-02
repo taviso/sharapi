@@ -7,13 +7,7 @@
             "DOM",
         ],
         "outDir": "dist/",
-        "allowJs": true,
     },
-    "references": [
-        {
-            "path": "build"
-        }
-    ],
     "files": [
         "src/Base.ts",
         "src/FeApp.ts",
@@ -45,9 +39,5 @@
         "src/Mission.ts",
         "src/SuperCamCentral.ts",
         "src/Util.ts",
-        "src/System.js",
-        "src/uidcache.js",
-        "src/main.js",
-        "src/frida.js",
     ]
 }

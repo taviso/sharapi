@@ -1,8 +1,18 @@
+import multi from '@rollup/plugin-multi-entry';
+import typescript from '@rollup/plugin-typescript'
+
 export default [{
-    input: 'dist/import.js',
+    input: {
+        include: ['src/*.ts'],
+        exclude: ['**/*.d.ts']
+    },
     output: {
         file: 'dist/sharapi.js',
         format: 'system'
     },
-    context: 'global'
+    plugins: [
+        multi(),
+        typescript()
+    ],
+    context: 'global',
 }]

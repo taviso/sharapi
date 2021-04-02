@@ -1,19 +1,19 @@
 {
   "devDependencies": {
-    "@tsconfig/recommended": "^1.0.1",
+    "@rollup/plugin-multi-entry": "^4.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/frida-gum": "^16.2.0",
     "@types/node": "^14.14.37",
     "concat": "^1.0.3",
-    "glob": "^7.1.6",
     "rimraf": "^3.0.2",
     "rollup": "^2.44.0",
+    "tslib": "^2.1.0",
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "build:main_build": "tsc --build",
-    "build:generate_imports": "node dist/exports.js 'src/*.ts' > dist/import.js",
     "build:rollup": "rollup -c",
-    "build:generate_scriptfile": "concat -o dist/scriptfile.out.js dist/System.js dist/sharapi.js dist/main.js",
-    "build": "npm run build:main_build && npm run build:generate_imports && npm run build:rollup && npm run build:generate_scriptfile",
+    "build:generate_scriptfile": "concat -o dist/scriptfile.out.js src/System.js dist/sharapi.js src/main.js",
+    "build": "npm run build:rollup && npm run build:generate_scriptfile",
     "release": "",
     "clean": "tsc --build --clean && npx rimraf sharapi.zip scriptfile.out.js dist/"
   }
