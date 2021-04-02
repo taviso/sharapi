@@ -572,6 +572,6 @@ export class Symbols {
      */
     static call<T>(name: string, ...args: Array<NativePointer | number | boolean>): T {
         let func = Symbols.find(name);
-        return <T>func.apply(func, args);
+        return <T><unknown>func.apply(func, args);
     }
 }

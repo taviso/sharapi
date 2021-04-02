@@ -9,18 +9,15 @@ export class CoinManager extends Base {
     }
 
     static GetInstance(): NativePointer {
-        let _GetInstance = Symbols.find("CoinManager::GetInstance");
-        return _GetInstance()
+        return Symbols.call<NativePointer>("CoinManager::GetInstance");
     }
 
     static AdjustBankValue(num: number): void {
-        let _AdjustBankValue = Symbols.find("CoinManager::AdjustBankValue");
-        _AdjustBankValue(num);
+        Symbols.call("CoinManager::AdjustBankValue", num);
     }
 
-    SpawnInstantCoins(position: Vector, count: number) {
-        let _SpawnInstantCoins = Symbols.find("CoinManager::SpawnInstantCoins");
-        _SpawnInstantCoins(this.ptr, count, position.toPointer());
+    SpawnInstantCoins(position: Vector, count: number) : void {
+        Symbols.call("CoinManager::SpawnInstantCoins", this.ptr, count, position.toPointer());
     }
 
     // FIXME, this doesnt work right

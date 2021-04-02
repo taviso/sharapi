@@ -44,8 +44,7 @@ export class Mapper extends Base {
     }
 
     GetLogicalIndex(code: number): number {
-        let _GetLogicalIndex = Symbols.find("Mapper::GetLogicalIndex");
-        return _GetLogicalIndex(this.ptr, code);
+        return Symbols.call<number>("Mapper::GetLogicalIndex", this.ptr, code);
     }
 
     GetCodeFromLogicalIndex(index): number {

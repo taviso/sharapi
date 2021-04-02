@@ -56,7 +56,7 @@ function genThiscallWrapper(param: NativeCallback, numArgs: number) {
 
         // push dword [esp+n]
         for (let i = 0; i < numArgs; i++) {
-            cw.putBytes(new Uint8Array([0xFF, 0x74, 0x24, 4 * numArgs]))
+            cw.putBytes([0xFF, 0x74, 0x24, 4 * numArgs])
         }
         cw.putPushReg("ecx"); // this
         cw.putCallAddress(param);

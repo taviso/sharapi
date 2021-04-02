@@ -9,8 +9,7 @@ export class CharacterManager extends Base {
     }
     
     static GetInstance(): NativePointer {
-        let _GetInstance = Symbols.find("CharacterManager::GetInstance");
-        return _GetInstance();
+        return Symbols.call<NativePointer>("CharacterManager::GetInstance");
     }
 
     /**

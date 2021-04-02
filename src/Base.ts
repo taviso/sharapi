@@ -36,7 +36,7 @@ export class Base {
     protected getVirtual(index: number,
                          returnType: string,
                          argTypes: Array<string>,
-                         abi='thiscall'): NativeFunction {
+                         abi: NativeABI='thiscall'): NativeFunction {
         return new NativeFunction(this.vftable.add(index * 4).readPointer(),
                                   returnType,
                                   argTypes,
@@ -72,7 +72,7 @@ export class Base {
 
         // Call vtable entry and cast to specified type.
         func = this.getVirtual(index, returnType, argTypesCopy);
-        return <T>func.apply(func, argsCopy);
+        return <T><unknown>func.apply(func, argsCopy);
     }
 
     protected getSuper<T extends Base>(index: number, superClass: {new(p: NativePointer): T}): T {

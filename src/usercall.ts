@@ -26,10 +26,10 @@ import "./frida"
  * @param address Address of the thiscall function.
  * @param result Register where the return value is stored.
  */
-export function userpurge(convention: Array<string>,
+export function userpurge(convention: Array<X86Register>,
                           params: number,
                           address: number,
-                          result="eax"): NativePointer
+                          result: X86Register="eax"): NativePointer
 {
     var code = Memory.alloc(64);
     var gen = new X86Writer(code);
@@ -43,7 +43,7 @@ export function userpurge(convention: Array<string>,
     // Recreate call stack
     for (var i = 0; i < params; i++) {
         // push dword [esp+n]
-        gen.putBytes(new Uint8Array([ 0xFF, 0x74, 0x24]))
+        gen.putBytes([ 0xFF, 0x74, 0x24])
         gen.putU8(4 * 4 + 4 * params);
     }
 
@@ -75,10 +75,10 @@ export function userpurge(convention: Array<string>,
     return code;
 }
 
-export function usercall(convention: Array<string>,
+export function usercall(convention: Array<X86Register>,
                          params: number,
                          address: number,
-                         result="eax"): NativePointer
+                         result: X86Register="eax"): NativePointer
 {
     var code = Memory.alloc(64);
     var gen = new X86Writer(code);
@@ -91,7 +91,7 @@ export function usercall(convention: Array<string>,
 
     // Recreate call stack
     for (var i = 0; i < params; i++) {
-        gen.putBytes(new Uint8Array([ 0xFF, 0x74, 0x24]))
+        gen.putBytes([0xFF, 0x74, 0x24])
         gen.putU8(4 * 4 + 4 * params);
     }
 

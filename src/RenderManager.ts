@@ -8,8 +8,7 @@ export class RenderManager extends Base {
     }
 
     static GetInstance(): NativePointer {
-        let _GetInstance = Symbols.find("RenderManager::GetInstance");
-        return _GetInstance();
+        return Symbols.call<NativePointer>("RenderManager::GetInstance");
     }
 
     pWorldScene() {
