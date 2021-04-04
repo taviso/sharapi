@@ -1,5 +1,7 @@
 # Simpsons: Hit & Run API
 
+## About The Project
+
 > ***This code is in a pre-pre-pre-alpha experimental state.***
 
 This is a library to automate the abandonware game Simpsons: Hit &
@@ -46,12 +48,64 @@ to kick every object on the map!
 
 Like this idea and want to help? Let me know!
 
-# Installation
+### Built With
 
-You need [frida](https://frida.re/) intalled, if you already have python it
+* [TypeScript](https://www.typescriptlang.org/)
+  * [Rollup](https://rollupjs.org/guide/en/)
+  * [Frida](https://frida.re/docs/javascript-api/)
+
+The [next](#getting-started-for-sharapi-authors) section is relevant if you plan on making changes to the core SharApi library. Skip [here](#getting-started-for-script-authors) if you only plan on authoring scripts/testing them in-game.
+
+## Getting Started For SharApi Authors
+
+This section covers how to set up a development environment for the SharApi library. The SharApi development environment is supported on Windows, Linux, and WSL distributions.
+
+### Prerequisites
+
+* [Node.js/NPM](https://nodejs.org/en/download/package-manager)
+
+### Installation
+
+  1. Clone the repo
+
+  ```sh
+  git clone https://github.com/taviso/sharapi.git
+  ```
+
+  1. Install NPM Packages
+
+  ```sh
+  npm install --save-dev
+  ```
+
+### Usage
+
+  ```sh
+  # Build the project to dist/scriptfile.out.js.
+  npm run build
+
+  # Clean the project output.
+  npm run clean
+  ```
+
+### Testing
+
+  Copy `inject.py` and `scriptfile.out.js` to your Windows machine for in-game testing. Follow the [next](#getting-started-for-script-authors) section, replacing the release version of `inject.py` and `scriptfile.out.js` with the versions from your dev environment.
+
+## Getting Started For Script Authors
+
+### Script Development Prerequisites
+
+* [Python for Windows](https://www.python.org/downloads/windows/)
+* SharApi library (`inject.py` and `scriptfile.out.js`)
+* The Simpsons: Hit & Run binary (`MD5:9009afe5ab6c2daf8605d8b613951902`)
+
+### Script Development Setup
+
+You need [frida](https://frida.re/) installed, if you already have python it
 couldn't be easier, something like:
 
-```
+```bash
 pip install frida-tools
 ```
 
@@ -60,27 +114,7 @@ The full frida install documentation is
 
 > Note: You must be using python for Windows, not WSL python.
 
-# Building
-
-> You can use a pre-built version if you just want to write a JavaScript script
-> and dont want to make any changes to sharapi.
-
-This project mostly uses TypeScript, a language that transpiles to JavaScript
-but adds strong typing. I find this useful for avoiding bugs during development,
-but the output can be used with JavaScript or TypeScript, whichever you prefer.
-
-You need `typescript` and `rollup` to build the script, or you can just use a
-prebuilt version. `tsc` is the typescript compiler, `rollup` takes all of the
-individual files, figures out the module dependencies and produces a single
-file to give to frida.
-
-> Note: This project uses submodules, remember to type `git submodule update --init --recursive`
-
-I use `WSL`, and just type `make` to build the final output files with GNU make,
-because I'm more familiar with Makefiles. In future I'll figure out how to use
-`tsconfig.json`.
-
-# Usage
+### Script Usage
 
 Run the game `Simpsons.exe`, you can use the launcher if you like, and type this:
 
@@ -118,17 +152,11 @@ v.SetPosition(p)
 
 Your car should jump 100 ft in the air.
 
-## Scripts
+### Scripts
 
 If yout want to run a script, try one of the examples in the
 [examples](/examples) directory.
 
+```bash
+python.exe ./inject.py Simpsons.exe examples/breakEverything.js
 ```
-python.exe Simpsons.exe examples/breakEverything.js
-```
-
-# Notes
-
-I'm using the binary with md5 `9009afe5ab6c2daf8605d8b613951902`.
-
-
