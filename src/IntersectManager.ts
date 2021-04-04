@@ -85,8 +85,7 @@ export class IntersectManager extends Base {
     }
 
     static GetInstance(): NativePointer {
-        let _GetInstance = Symbols.find("IntersectManager::GetInstance");
-        return _GetInstance();
+        return Symbols.call<NativePointer>("IntersectManager::GetInstance");
     }
 
     FindClosestRoad(position: Vector, sphereRadius: number): RoadSegment {

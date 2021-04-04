@@ -3,20 +3,18 @@ import { Symbols } from "./Symbols"
 import { Base } from "./Base"
 
 export class FeApp extends Base {
-    static _GetInstance = Symbols.find("FeApp::GetInstance");
-
     constructor() {
         super(FeApp.GetInstance());
     }
 
-    static GetInstance() {
-        return FeApp._GetInstance();
+    static GetInstance(): NativePointer {
+        return Symbols.call<NativePointer>("FeApp::GetInstance");
     }
 
     GetProject(): FeProjectScroobyProject {
-        var _GetProject = this.getVirtual(7, 'pointer', ['pointer']);
-        return new FeProjectScroobyProject(_GetProject(this.ptr));
+        return new FeProjectScroobyProject(this.callVirtual<NativePointer>(7, 'pointer', ['pointer'], this.ptr));
     }
+
     GetProjectIndex() {
         var _GetProjectIndex = this.getVirtual(8, 'int', ['pointer']);
         return _GetProjectIndex(this.ptr);
@@ -39,8 +37,7 @@ class FeScreenScroobyScreen extends Base {
     }
 
     GetPageByIndex(index) {
-        var _GetPageByIndex = this.getVirtual(3, 'pointer', ['pointer', 'int']);
-        return new FePageScroobyPage(_GetPageByIndex(this.ptr, index));
+        return new FePageScroobyPage(this.callVirtual<NativePointer>(3, 'pointer', ['pointer', 'int'], this.ptr, index));
     }
 
     GetNumberOfPages() {
@@ -147,8 +144,7 @@ class FePageScroobyPage extends Base {
      * Total number of layers on this page.
      */
     GetNumberOfLayers(): number {
-        var _GetNumberOfLayers = this.getVirtual(2, 'int', ['pointer']);
-        return _GetNumberOfLayers(this.ptr);
+        return this.callVirtual<number>(2, 'int', ['pointer']);
     }
 
     /**
@@ -156,8 +152,7 @@ class FePageScroobyPage extends Base {
      * @param index Zero indexed layer to retrieve.
      */
     GetLayerByIndex(index: number): FeLayerScroobyDrawable {
-        let _GetLayerByIndex = this.getVirtual(5, 'pointer', ['pointer', 'int']);
-        let layer: NativePointer = _GetLayerByIndex(this.ptr, index);
+        let layer: NativePointer = this.callVirtual<NativePointer>(5, 'pointer', ['pointer, int'], this.ptr, index);
         let idx: number = layer.readPointer().add(4).readU32();
         return new FeLayer.Scrooby.Drawable(layer.add(idx));
     }
@@ -174,8 +169,7 @@ class FeProjectScroobyProject extends Base {
     }
 
     GetScreenCount(): number {
-        let _GetScreenCount = this.getVirtual(8, 'int', ['pointer']);
-        return _GetScreenCount(this.ptr);
+        return this.callVirtual<number>(8, 'int', ['pointer'], this.ptr);
     }
 }
 

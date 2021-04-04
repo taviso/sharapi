@@ -1,0 +1,28 @@
+{
+  "name": "sharapi",
+  "description": "Scripting/automation library for The Simpsons: Hit & Run",
+  "keywords": [],
+  "author": "",
+  "version": "0.0.1",
+  "devDependencies": {
+    "@rollup/plugin-multi-entry": "^4.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@types/frida-gum": "^16.2.0",
+    "@types/node": "^14.14.37",
+    "concat": "^1.0.3",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.44.0",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.3"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "postbuild": "concat -o dist/scriptfile.out.js src/System.js dist/sharapi.js src/main.js",
+    "release": "",
+    "clean": "tsc --build --clean && npx rimraf dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taviso/sharapi.git"
+  }
+}
